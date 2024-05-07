@@ -21,7 +21,6 @@ export default function Home() {
     console.log(values);
   };
 
-
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -37,7 +36,6 @@ export default function Home() {
             for="grid-password"
           >
             CARD NUMBER
-     
           </label>
 
           <input
@@ -56,16 +54,16 @@ export default function Home() {
             placeholder="0000 0000 0000 0000"
           />
 
-<div className="card absolute -top-[45px] -right-[100px]">
-        <Cards
-          number={watch("cardNumber")}
-          expiry={27}
-          cvc={watch("cvv")}
-          name={"leonard adjei"}
-          size={40}
-          // focused={state.focus}
-        />
-      </div>
+          <div className="card absolute -top-[45px] -right-[100px]">
+            <Cards
+              number={watch("cardNumber")}
+              expiry={27}
+              cvc={watch("cvv")}
+              name={"leonard adjei"}
+              size={40}
+              // focused={state.focus}
+            />
+          </div>
           {formState?.errors?.cardNumber?.message && (
             <p className="text-sm text-red-500">
               {formState?.errors?.cardNumber?.message}
@@ -146,11 +144,10 @@ export default function Home() {
           )}
         </div>
       </div>
-      
 
       <button
         type="submit"
-        className="bg-green-700 w-full flex justify-center items-center gap-2 text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
+        className="bg-green-600 w-full flex justify-center items-center gap-2 text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
       >
         <GiTakeMyMoney size={25} />
         Pay
