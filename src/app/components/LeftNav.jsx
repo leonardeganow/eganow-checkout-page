@@ -33,7 +33,7 @@ export default function LeftNav() {
 
           <li className={clsx({
             "font-medium  p-2 my-4  rounded  ": true,
-           "bg-white text-gray-700 ": pathname === item.href,
+           "bg-white text-gray-600 ": pathname === item.href,
            
           })}
           style={{
