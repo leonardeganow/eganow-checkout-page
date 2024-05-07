@@ -26,13 +26,13 @@ export default function Home() {
       onSubmit={handleSubmit(onSubmit)}
       className="w-full max-w-lg mt-5 pb-5 "
     >
-      <h1 className="text-center font-bold mb-5 text-gray-500">
+      <h1 className="text-center font-semibold text-md mb-5 text-gray-500">
         Enter your card details to pay
       </h1>
       <div className="flex flex-wrap -mx-3 mb-4">
         <div className="w-full px-3 relative">
           <label
-            className="roboto block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2 relative"
+            className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2 relative "
             for="grid-password"
           >
             CARD NUMBER
@@ -48,7 +48,7 @@ export default function Home() {
                 !!formState.errors?.cardNumber === true,
             })}
             id=""
-            roboto
+            
             type="number"
             {...register("cardNumber")}
             placeholder="0000 0000 0000 0000"
@@ -74,7 +74,7 @@ export default function Home() {
       <div className="flex flex-wrap -mx-3 mb-4">
         <div className="w-full md:w-1/3 px-3 mb-4 md:mb-0">
           <label
-            className="roboto block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2 "
+            className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2 "
             for="grid-first-name"
           >
             EXPIRY MONTH
@@ -100,7 +100,7 @@ export default function Home() {
           )}
         </div>
         <div className="w-full md:w-1/3 px-3 mb-4">
-          <label className="roboto block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2">
+          <label className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2">
             EXPIRY YEAR
           </label>
           <input
@@ -123,7 +123,7 @@ export default function Home() {
           )}
         </div>
         <div className="w-full md:w-1/3 px-3">
-          <label className="roboto block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2">
+          <label className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2">
             CARD CVV
           </label>
           <input
