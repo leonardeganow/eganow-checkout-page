@@ -5,7 +5,7 @@ export const validationSchema = yup.object({
   cardNumber: yup
     .string()
     .required("Card number is required")
-    .min(16, "Card number must be at least 10 digits long"),
+    .min(16, "Card number must be at least 16 digits long"),
   expiryMonth: yup
     .string()
     .required("Expiry month is required")

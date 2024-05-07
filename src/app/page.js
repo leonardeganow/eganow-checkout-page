@@ -92,7 +92,7 @@ export default function Home() {
             })}
             id="grid-first-name"
             type="text"
-            placeholder="00"
+            placeholder="MM"
             {...register("expiryMonth")}
           />
           {formState?.errors?.expiryMonth?.message && (
@@ -115,7 +115,7 @@ export default function Home() {
                 !!formState.errors?.expiryYear === true,
             })}
             type="number"
-            placeholder="00"
+            placeholder="YY"
             {...register("expiryYear")}
           />
           {formState?.errors?.expiryYear?.message && (
@@ -136,7 +136,7 @@ export default function Home() {
               "border-red-500 border-2": !!formState.errors?.cvv === true,
             })}
             type="number"
-            placeholder="000"
+            placeholder="123"
             {...register("cvv")}
           />
           {formState?.errors?.cvv?.message && (
