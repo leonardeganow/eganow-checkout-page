@@ -122,7 +122,7 @@ function page() {
           </button>
 
         </div>
-        <small className='text-gray-400 text-xs text-center p-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos id perspiciatis laboriosam aut rerum fugiat!</small>
+        <small className='text-gray-400 text-xs text-center p-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos id perspiciatis laboriosam aut rerum fugiat!!!!</small>
       </form>
     </div>
   )
