@@ -7,7 +7,14 @@ import clsx from "clsx";
 import { GiTakeMyMoney } from "react-icons/gi";
 import Cards from "react-credit-cards-2";
 import "react-credit-cards-2/dist/lib/styles.scss";
-// import "../../src/app/"
+import {
+  Amount,
+  MERCHANT_AUTH,
+  MERCHANT_PASSWORD,
+  MERCHANT_USERNAME_ID,
+} from "./constants";
+import { useEffect } from "react";
+import { getAccessToken, getCardServiceId, getPaymentServices } from "./api";
 
 export default function Home() {
   //NOTE - useform
@@ -19,8 +26,23 @@ export default function Home() {
 
   const onSubmit = (values) => {
     console.log(values);
+    try {
+    } catch (error) {}
   };
 
+  const getAccessTokenHandler = async () => {
+    try {
+      const response = await getAccessToken();
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getAccessTokenHandler();
+    getPaymentServices()
+  }, []);
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -48,7 +70,6 @@ export default function Home() {
                 !!formState.errors?.cardNumber === true,
             })}
             id=""
-            
             type="number"
             {...register("cardNumber")}
             placeholder="0000 0000 0000 0000"

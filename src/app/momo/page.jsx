@@ -26,7 +26,7 @@ const options = [
   },
 ];
 
-function page() {
+function Page() {
   const {
     register,
     handleSubmit,
@@ -127,13 +127,13 @@ function page() {
             Confirm
           </button>
         </div>
-        <small className="text-gray-400 text-xs text-center p-5">
+        {/* <small className="text-gray-400 text-xs text-center p-5">
           Lorem ipsum dolor sit amet consectetur adipisicingfvfgg elit. Quos id
           perspiciatis laboriosam aut rerum fugiat!!!!
-        </small>
+        </small> */}
       </form>
     </div>
   );
 }
 
-export default page;
+export default Page;
