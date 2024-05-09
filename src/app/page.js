@@ -147,7 +147,7 @@ export default function Home() {
 
       <button
         type="submit"
-        className="bg-[#7cbaf6] w-full flex justify-center items-center gap-2 text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
+        className="bg-[#1f8fff] w-full flex justify-center items-center gap-2 text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
       >
         <GiTakeMyMoney size={25} />
         Pay

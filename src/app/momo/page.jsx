@@ -66,7 +66,7 @@ function page() {
         </small>
 
         <div className="w-[80%]">
-          {/* MOMO NUMBER INPUT */}
+          
           <div className="w-full relative mb-5">
             <label
               className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2 relative "
@@ -97,7 +97,6 @@ function page() {
             )}
           </div>
 
-          {/* SELECT NETWORK */}
           <div className="mb-5">
             <Select
               options={options}
@@ -120,10 +119,9 @@ function page() {
             )}
           </div>
 
-          {/* submit buttom */}
           <button
             type="submit"
-            className="bg-green-600 w-full flex justify-center items-center gap-2 text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
+            className="bg-[#1f8fff] w-full flex justify-center items-center gap-2 text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
           >
             <GiTakeMyMoney size={25} />
             Confirm
