@@ -1,36 +1,41 @@
-'use client'
+"use client";
 
-import React from 'react'
+import React from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import clsx from "clsx";
-import Select from 'react-dropdown-select';
+import Select from "react-dropdown-select";
 
 import { defaultFormValues } from "./defaultFormValues";
 import { validationSchema } from "./validationSchema";
-import { GiTakeMyMoney } from 'react-icons/gi';
+import { GiTakeMyMoney } from "react-icons/gi";
 import { MdMobileScreenShare } from "react-icons/md";
-
-
-
 
 const options = [
   {
     value: 1,
-    label: 'MTN'
+    label: "MTN",
   },
   {
     value: 2,
-    label: 'TELECEL'
+    label: "TELECEL",
   },
   {
     value: 3,
-    label: 'AIRTEL TIGO'
-  }
-]
+    label: "AIRTEL TIGO",
+  },
+];
 
 function page() {
-  const { register, handleSubmit, setValue, getValues, reset, watch, formState } = useForm({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    getValues,
+    reset,
+    watch,
+    formState,
+  } = useForm({
     mode: "onChange",
     resolver: yupResolver(validationSchema),
     defaultValues: defaultFormValues,
@@ -45,17 +50,22 @@ function page() {
     console.log(values);
   };
 
-
   return (
-    <div className='lg:h-auto h-[60vh]'>
-      <div className='text-center flex justify-center items-center pt-5'>
-        <MdMobileScreenShare size={35} color='red' />
+    <div className="lg:h-auto h-[60vh]">
+      <div className="text-center flex justify-center items-center pt-5">
+        <MdMobileScreenShare size={35} color="red" />
       </div>
 
-      <form className='flex flex-col items-center justify-center ' onSubmit={handleSubmit(onSubmit)}>
-        <small className='text-center text-xs text-gray-400 block lg:px-10 p-3'>Enter  your mobile money number and select a provider to start your payment</small>
+      <form
+        className="flex flex-col items-center justify-center "
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <small className="text-center text-xs text-gray-400 block lg:px-10 p-3">
+          Enter your mobile money number and select a provider to start your
+          payment
+        </small>
 
-        <div className='w-[80%]'>
+        <div className="w-[80%]">
           {/* MOMO NUMBER INPUT */}
           <div className="w-full relative mb-5">
             <label
@@ -75,7 +85,6 @@ function page() {
                   !!formState.errors?.momoNumber === true,
               })}
               id=""
-
               type="string"
               {...register("momoNumber")}
               placeholder="0000000000"
@@ -89,18 +98,18 @@ function page() {
           </div>
 
           {/* SELECT NETWORK */}
-          <div className='mb-5'>
+          <div className="mb-5">
             <Select
               options={options}
               {...register("provider")}
               onChange={handleSelectChange}
-              placeholder='Choose a provider'
-              color='#e5e7ebff'
-              className='bg-gray-200 py-3 rounded-lg border-0 outline-none focus:outline-none text-gray-800'
+              placeholder="Choose a provider"
+              color="#e5e7ebff"
+              className="bg-gray-200 py-3 rounded-lg border-0 outline-none focus:outline-none text-gray-800"
               style={{
                 outline: "none",
-                borderRadius: '3px',
-                padding: '10px'
+                borderRadius: "3px",
+                padding: "10px",
               }}
             />
 
@@ -109,7 +118,6 @@ function page() {
                 {formState?.errors?.provider?.message}
               </small>
             )}
-
           </div>
 
           {/* submit buttom */}
@@ -120,12 +128,14 @@ function page() {
             <GiTakeMyMoney size={25} />
             Confirm
           </button>
-
         </div>
-        <small className='text-gray-400 text-xs text-center p-5'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos id perspiciatis laboriosam aut rerum fugiat!!!!</small>
+        <small className="text-gray-400 text-xs text-center p-5">
+          Lorem ipsum dolor sit amet consectetur adipisicingfvfgg elit. Quos id
+          perspiciatis laboriosam aut rerum fugiat!!!!
+        </small>
       </form>
     </div>
-  )
+  );
 }
 
-export default page
+export default page;
