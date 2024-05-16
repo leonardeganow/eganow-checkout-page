@@ -33,7 +33,7 @@ export default function Home() {
   const getAccessTokenHandler = async () => {
     try {
       const response = await getAccessToken();
-      console.log(response);
+      // console.log(response);
     } catch (error) {
       console.log(error);
     }

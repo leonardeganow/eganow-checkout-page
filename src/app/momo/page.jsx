@@ -27,6 +27,7 @@ const options = [
 ];
 
 function Page() {
+
   const {
     register,
     handleSubmit,
@@ -46,18 +47,21 @@ function Page() {
     setValue("provider", selectedOption[0]?.label);
   };
 
+
+  // HANDLE FORM SUBMISSION
   const onSubmit = (values) => {
     console.log(values);
   };
 
+
   return (
-    <div className="lg:h-auto h-[60vh]">
+    <div className="">
       <div className="text-center flex justify-center items-center pt-5">
         <MdMobileScreenShare size={35} color="red" />
       </div>
 
       <form
-        className="flex flex-col items-center justify-center "
+        className="flex flex-col items-center justify-center mb-10 "
         onSubmit={handleSubmit(onSubmit)}
       >
         <small className="text-center text-xs text-gray-400 block lg:px-10 p-3">
@@ -132,6 +136,13 @@ function Page() {
           perspiciatis laboriosam aut rerum fugiat!!!!
         </small> */}
       </form>
+
+
+      {/* <section className="flex justify-center items-center">
+        Loading...
+      </section> */}
+
+
     </div>
   );
 }

@@ -6,8 +6,12 @@ import {
   MERCHANT_USERNAME_ID,
 } from "../constants";
 
-const BEARER_TOKEN =
-  "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImZWZSt6ZTYyQUpMYUZjWFUwUURQRTRzNFR3R1Mzb0krOGdlOHkwL1pLdWs9IiwiY2VydHNlcmlhbG51bWJlciI6InZCMDlweXU1L3N3NGFCbDg5WXgrQnNiYVNRMFRlN3AyNU5GRHpxeXJzcEk9IiwicHJpbWFyeXNpZCI6InU2NTdjV1JzcWoxa0h2bmwwVDZ6SEx3Z3VHWmxvOFhyUE5NeENjaUo4N1k9IiwiaHR0cDovL3NjaGVtYXMueG1sc29hcC5vcmcvd3MvMjAwNS8wNS9pZGVudGl0eS9jbGFpbXMvY291bnRyeSI6IjJtNno2K3JET2wwMXlCMmNwUEFwa3c9PSIsIm5iZiI6MTcxNTI2ODQ5NSwiZXhwIjoxNzE1MjcyMDk1LCJpYXQiOjE3MTUyNjg0OTV9.L6_4fMxbcYzdBoBoTu1nIj5ZY96HnglipkWyIAMo8siUbpRYfjN18zVfB7Aa5jr1OnpzjS7I3f6dO04LK_1cmA";
+
+
+/**
+ * GET ACCESS TOKEN
+ * @returns 
+ */
 export async function getAccessToken() {
   try {
     const data = await axios.get(`${BASE_URL}/accesstoken`, {
@@ -17,47 +21,156 @@ export async function getAccessToken() {
         "Content-Type": "application/json", // Adjust content type as needed
       },
     });
+    localStorage.setItem('token', data.data.Token)
     return data;
   } catch (error) {
     throw new Error(error);
   }
 }
 
+
+/**
+ * LIST PAYMENT SERVICES
+ * @returns 
+ */
 export async function getPaymentServices() {
-    const myHeaders = new Headers();
-    myHeaders.append("X-Auth", "");
-    myHeaders.append("Authorization", `Bearer ${BEARER_TOKEN}`);
-    const raw = "{\r\n\"LanguageId\" : \"En\",\r\n\"CountryCode\" : \"GH0233\"\r\n}";
+  // Get Bearer token from localStorage
+  const BEARER_TOKEN = localStorage.getItem('token');
+  try {
+    // Make the request with the Bearer token in the Authorization header
+    const response = await axios.post(
+      `${BASE_URL}/enquiry/collectionservices`,
+      {
+        LanguageId: "En",
+        CountryCode: "GH0233"
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${BEARER_TOKEN}`,
+          'Content-Type': 'application/json',
+          'X-Auth': MERCHANT_AUTH,
+        }
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    // Handle errors here
+    console.error('Error:', error);
+    throw error; // Rethrow the error to be caught by the caller
+  }
+}
 
-    const requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: raw,
-        redirect: 'follow'
-      };
-      
-      fetch("https://eganow-merchant.egadevapi.com/eganow/api/enquiry/collectionservices", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-//   try {
-//     const data = await axios.post(
-//       `${BASE_URL}/enquiry/collectionservices`,
-//       {
-//         LanguageId: "En",
-//         CountryCode: "GH0233",
-//       },
-//       {
-//         headers: {
-//           Authorization: `Bearer ${BEARER_TOKEN}`,
-//           "Content-Type": "application/json",
-//           xauth: "",
-//         },
-//       }
-//     );
 
-//     console.log(data);
-//   } catch (error) {
-//     console.log(error);
-//   }
+/** GET ACCOUNT HOLDER API
+ * @params {
+  "CustomerAcctNo" : "233244415669",
+  "PayPartnerServiceId" : "MTNMOMG101",
+}
+ */
+export async function getAccHolderInfo(data) {
+  // Get Bearer token from localStorage
+  const BEARER_TOKEN = localStorage.getItem('token');
+  try {
+    // Make the request with the Bearer token in the Authorization header
+    const response = await axios.post(
+      `${BASE_URL}/kyc/accountinfo`,
+      {
+        LanguageId: "En",
+        CountryCode: "GH0233",
+        CustomerAcctNo: data?.customerAccNo,
+        PayPartnerServiceId: data?.serviceId,
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${BEARER_TOKEN}`,
+          'Content-Type': 'application/json',
+          'X-Auth': MERCHANT_AUTH,
+        }
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    // Handle errors here
+    console.error('Error:', error);
+    throw error; // Rethrow the error to be caught by the caller
+  }
+}
+
+
+/**
+ * 
+ * @param {* }
+ * @returns 
+ */
+export async function makeCollection(data) {
+  // Get Bearer token from localStorage
+  const BEARER_TOKEN = localStorage.getItem('token');
+  try {
+    // Make the request with the Bearer token in the Authorization header
+    const response = await axios.post(
+      `${BASE_URL}/transfer/debitaccount`,
+      {
+        "PayPartnerServiceId": data?.ServiceId,
+        "Amount": data?.amount,
+        "AccountNoOrCardNoOrMSISDN": data.accountNoOrCardNoOrMSISDN,
+        "AccountName": data?.name || "",
+        "TransactionId": data?.transactionId,
+        "Narration": data?.narration,
+        "TransCurrencyIso": "GHS",
+        "ExpiryDateMonth": data?.expiryDate || 0,
+        "ExpiryDateYear": data?.expiryMonth || 0,
+        "Cvv": data?.cvv || 0,
+        "LanguageId": "En"
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${BEARER_TOKEN}`,
+          'Content-Type': 'application/json',
+          'X-Auth': MERCHANT_AUTH,
+        }
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    // Handle errors here
+    console.error('Error:', error);
+    throw error; // Rethrow the error to be caught by the caller
+  }
+}
+
+
+/**
+ * GET THE TRANSACTION STATUS
+ * @param {*} data 
+ * @returns 
+ */
+export async function getTransactionStatus(data) {
+  // Get Bearer token from localStorage
+  const BEARER_TOKEN = localStorage.getItem('token');
+  try {
+    // Make the request with the Bearer token in the Authorization header
+    const response = await axios.post(
+      `${BASE_URL}/transfer/transstatus`,
+      {
+        "TransactionId": data.transactionId,
+        "LanguageId": "En"
+      },
+      {
+        headers: {
+          'Authorization': `Bearer ${BEARER_TOKEN}`,
+          'Content-Type': 'application/json',
+          'X-Auth': MERCHANT_AUTH,
+        }
+      }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    // Handle errors here
+    console.error('Error:', error);
+    throw error; // Rethrow the error to be caught by the caller
+  }
 }
