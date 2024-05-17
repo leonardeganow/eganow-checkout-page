@@ -78,8 +78,8 @@ export async function getAccHolderInfo(data) {
       {
         LanguageId: "En",
         CountryCode: "GH0233",
-        CustomerAcctNo: data?.customerAccNo,
-        PayPartnerServiceId: data?.serviceId,
+        CustomerAcctNo: "233558628473" || data?.customerAccNo,
+        PayPartnerServiceId: "MTNMOMGH0233SC1001000101" ||  data?.serviceId,
       },
       {
         headers: {

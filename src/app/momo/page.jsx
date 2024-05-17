@@ -11,22 +11,24 @@ import { validationSchema } from "./validationSchema";
 import { GiTakeMyMoney } from "react-icons/gi";
 import { MdMobileScreenShare } from "react-icons/md";
 
+const { customAlphabet } = require('nanoid');
+import { getAccHolderInfo, makeCollection } from "../api";
+import { Amount } from "../constants";
+
 const options = [
   {
-    value: 1,
+    value: "MTNMOMGH0233SC1001000101",
     label: "MTN",
   },
   {
-    value: 2,
+    value: "VODCASGH0233SC10010001",
     label: "TELECEL",
-  },
-  {
-    value: 3,
-    label: "AIRTEL TIGO",
   },
 ];
 
 function Page() {
+  // INITIALIZE NANOID
+  const nanoid = customAlphabet('0123456789', 12);
 
   const {
     register,
@@ -44,13 +46,35 @@ function Page() {
 
   // HANDLE SELECT OPTION
   const handleSelectChange = (selectedOption) => {
-    setValue("provider", selectedOption[0]?.label);
+    setValue("provider", selectedOption[0]?.value);
   };
+
+  const kyc=async()=>{
+    try {
+      const customer = await getAccHolderInfo()
+      console.log(customer)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
 
   // HANDLE FORM SUBMISSION
-  const onSubmit = (values) => {
-    console.log(values);
+  const onSubmit = async(values) => {
+      const transactionId = nanoid(); //GENERATE TRANSACTION ID
+      const data = {
+        ServiceId : values.provider,
+        accountNoOrCardNoOrMSISDN : values.momoNumber,
+        transactionId : transactionId,
+        narration : 'Payment of goods and services',
+        amount : Amount
+      }
+      try {
+        const response = await makeCollection(data);
+        console.log(response)
+      } catch (error) {
+        console.error(error)
+      }
   };
 
 
