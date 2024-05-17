@@ -2,10 +2,13 @@ import * as yup from "yup";
 import { CREDIT_CARD_CVV_REGEX, CREDIT_CARD_MONTH_REGEX, CREDIT_CARD_YEAR_REGEX } from "./constants";
 
 export const validationSchema = yup.object({
-  cardNumber: yup
+  accountNoOrCardNoOrMSISDN: yup
     .string()
     .required("Card number is required")
     .max(16, "Card number must be 16 digits long"),
+    name: yup
+    .string()
+    .required("full name is required"),
   expiryMonth: yup
     .string()
     .required("Expiry month is required")

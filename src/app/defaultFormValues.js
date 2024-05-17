@@ -1,6 +1,9 @@
 export const defaultFormValues = {
-  cardNumber: "",
+  name: "",
+  accountNoOrCardNoOrMSISDN: "",
   expiryMonth: "",
   expiryYear: "",
   cvv: "",
+  serviceId: "",
+  amount: "",
 };
