@@ -22,6 +22,7 @@ export async function getAccessToken() {
       },
     });
     localStorage.setItem('token', data.data.Token)
+    console.log( data.data);
     return data;
   } catch (error) {
     throw new Error(error);
@@ -107,6 +108,7 @@ export async function getAccHolderInfo(data) {
 export async function makeCollection(data) {
   // Get Bearer token from localStorage
   const BEARER_TOKEN = localStorage.getItem('token');
+  console.log(data);
   try {
     // Make the request with the Bearer token in the Authorization header
     const response = await axios.post(

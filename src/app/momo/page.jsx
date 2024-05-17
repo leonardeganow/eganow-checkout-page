@@ -11,9 +11,10 @@ import { validationSchema } from "./validationSchema";
 import { GiTakeMyMoney } from "react-icons/gi";
 import { MdMobileScreenShare } from "react-icons/md";
 
-const { customAlphabet } = require('nanoid');
+import { customAlphabet } from 'nanoid';
 import { getAccHolderInfo, makeCollection } from "../api";
 import { Amount } from "../constants";
+import { useRouter } from 'next/navigation'
 
 const options = [
   {
@@ -27,6 +28,7 @@ const options = [
 ];
 
 function Page() {
+  const router = useRouter()
   // INITIALIZE NANOID
   const nanoid = customAlphabet('0123456789', 12);
 
@@ -49,14 +51,6 @@ function Page() {
     setValue("provider", selectedOption[0]?.value);
   };
 
-  const kyc=async()=>{
-    try {
-      const customer = await getAccHolderInfo()
-      console.log(customer)
-    } catch (error) {
-      console.error(error)
-    }
-  }
 
 
   // HANDLE FORM SUBMISSION
@@ -71,6 +65,9 @@ function Page() {
       }
       try {
         const response = await makeCollection(data);
+        if(response.Status && response.TransStatus == "PENDING"){
+          router.push('/processing')
+        }
         console.log(response)
       } catch (error) {
         console.error(error)
