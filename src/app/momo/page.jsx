@@ -15,6 +15,8 @@ import { customAlphabet } from 'nanoid';
 import { getAccHolderInfo, makeCollection } from "../api";
 import { Amount } from "../constants";
 import { useRouter } from 'next/navigation'
+import { Rings } from "react-loader-spinner";
+
 
 const options = [
   {
@@ -50,8 +52,6 @@ function Page() {
   const handleSelectChange = (selectedOption) => {
     setValue("provider", selectedOption[0]?.value);
   };
-
-
 
   // HANDLE FORM SUBMISSION
   const onSubmit = async(values) => {
@@ -145,12 +145,35 @@ function Page() {
           </div>
 
           <button
+        type="submit"
+        disabled={formState.isSubmitting}
+        className="bg-[#1f8fff] w-full flex justify-center items-center  text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
+      >
+        {formState.isSubmitting ? (
+          <Rings
+            visible={true}
+            height="30"
+            width="30"
+            color="white"
+            ariaLabel="rings-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
+        ) : (
+          <div className="flex justify-center items-center gap-2">
+            <GiTakeMyMoney size={25} />
+            Pay
+          </div>
+        )}
+      </button>
+
+          {/* <button
             type="submit"
             className="bg-[#1f8fff] w-full flex justify-center items-center gap-2 text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
           >
             <GiTakeMyMoney size={25} />
             Confirm
-          </button>
+          </button> */}
         </div>
         {/* <small className="text-gray-400 text-xs text-center p-5">
           Lorem ipsum dolor sit amet consectetur adipisicingfvfgg elit. Quos id

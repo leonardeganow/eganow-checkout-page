@@ -134,7 +134,7 @@ export async function makeCollection(data) {
         }
       }
     );
-    console.log(response.data);
+    localStorage.setItem('transactionId', data?.transactionId)
     return response.data;
   } catch (error) {
     // Handle errors here
