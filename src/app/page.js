@@ -7,9 +7,11 @@ import clsx from "clsx";
 import { GiTakeMyMoney } from "react-icons/gi";
 import Cards from "react-credit-cards-2";
 import "react-credit-cards-2/dist/lib/styles.scss";
-
+import { customAlphabet } from "nanoid";
 import { useEffect } from "react";
-import { getPaymentServices, makeCollection } from "./api";
+import { getAccessToken, getPaymentServices, makeCollection } from "./api";
+import { Rings } from "react-loader-spinner";
+import { Amount } from "./constants";
 
 export default function Home() {
   //NOTE - useform
@@ -21,18 +23,24 @@ export default function Home() {
     }
   );
 
-  const onSubmit = async (values) => {
-    if(values){
+  const nanoid = customAlphabet("0123456789", 12);
 
-      const data = {
-        narration: `${values.name} pays GHS${values.amount}`,
-        ...values
-      }
-      console.log(data);
-      // try {
+  const onSubmit = async (values) => {
+    const transactionId = nanoid(); //GENERATE TRANSACTION ID
+
+    const data = {
+      narration: `${values.name} pays GHS${values.amount}`,
+      transactionId,
+      ...values,
+    };
+
+    console.log(data);
+    try {
+      const response = await makeCollection(data);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
     }
-    //   const response = await makeCollection();
-    // } catch (error) {}
   };
 
   const getPaymentServicesHandler = async () => {
@@ -40,8 +48,10 @@ export default function Home() {
       const response = await getPaymentServices();
       if (response.Status) {
         const serviceId =
-          response?.PaymentTypesAndSvcList[2]?.PayPartnerServiceId;
-        setValue("serviceId", serviceId);
+          response?.PaymentTypesAndSvcList[3]?.PayPartnerServiceId;
+        setValue("serviceId", serviceId || "PAYMENTCARDGATEWAY");
+      } else {
+        setValue("serviceId", "PAYMENTCARDGATEWAY");
       }
     } catch (error) {
       console.log(error);
@@ -49,9 +59,11 @@ export default function Home() {
   };
 
   useEffect(() => {
-    setValue("amount", 2);
+    setValue("amount", Amount);
+    getAccessToken();
     getPaymentServicesHandler();
   }, []);
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -64,7 +76,7 @@ export default function Home() {
         <div className="w-full px-3 relative">
           <label
             className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2 relative "
-            for="grid-password"
+            htmlFor="grid-password"
           >
             CARD NUMBER
           </label>
@@ -106,7 +118,7 @@ export default function Home() {
         <div className="w-full px-3 ">
           <label
             className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2  "
-            for="grid-password"
+            htmlFor="grid-password"
           >
             Full name
           </label>
@@ -136,7 +148,7 @@ export default function Home() {
         <div className="w-full md:w-1/3 px-3 mb-4 md:mb-0">
           <label
             className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2 "
-            for="grid-first-name"
+            htmlFor="grid-first-name"
           >
             EXP MONTH
           </label>
@@ -208,10 +220,25 @@ export default function Home() {
 
       <button
         type="submit"
-        className="bg-[#1f8fff] w-full flex justify-center items-center gap-2 text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
+        disabled={formState.isSubmitting}
+        className="bg-[#1f8fff] w-full flex justify-center items-center  text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
       >
-        <GiTakeMyMoney size={25} />
-        Pay
+        {formState.isSubmitting ? (
+          <Rings
+            visible={true}
+            height="30"
+            width="30"
+            color="white"
+            ariaLabel="rings-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
+        ) : (
+          <div className="flex justify-center items-center gap-2">
+            <GiTakeMyMoney size={25} />
+            Pay
+          </div>
+        )}
       </button>
     </form>
   );

@@ -22,6 +22,7 @@ export async function getAccessToken() {
       },
     });
     localStorage.setItem('token', data.data.Token)
+    console.log(data);
     return data;
   } catch (error) {
     throw new Error(error);

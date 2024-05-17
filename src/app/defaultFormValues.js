@@ -6,6 +6,4 @@ export const defaultFormValues = {
   cvv: "",
   serviceId: "",
   amount: "",
-  // narration: "",
-  transactionId: "",
 };
