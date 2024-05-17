@@ -112,15 +112,15 @@ export async function makeCollection(data) {
     const response = await axios.post(
       `${BASE_URL}/transfer/debitaccount`,
       {
-        "PayPartnerServiceId": data?.ServiceId,
+        "PayPartnerServiceId": data?.serviceId,
         "Amount": data?.amount,
         "AccountNoOrCardNoOrMSISDN": data.accountNoOrCardNoOrMSISDN,
         "AccountName": data?.name || "",
         "TransactionId": data?.transactionId,
         "Narration": data?.narration,
         "TransCurrencyIso": "GHS",
-        "ExpiryDateMonth": data?.expiryDate || 0,
-        "ExpiryDateYear": data?.expiryMonth || 0,
+        "ExpiryDateMonth": data?.expiryMonth || 0,
+        "ExpiryDateYear": data?.expiryYear || 0,
         "Cvv": data?.cvv || 0,
         "LanguageId": "En"
       },

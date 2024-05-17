@@ -13,4 +13,5 @@ export const MERCHANT_AUTH = "GH0233eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJjZXJ
 
 // export const BASE_URL= "https://eganow-merchant.egadevapi.com/eganow/api"
 export const BASE_URL= "https://wwh0vng7-5001.inc1.devtunnels.ms/eganow/api"
+
 export const Amount = 3;

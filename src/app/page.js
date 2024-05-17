@@ -7,41 +7,50 @@ import clsx from "clsx";
 import { GiTakeMyMoney } from "react-icons/gi";
 import Cards from "react-credit-cards-2";
 import "react-credit-cards-2/dist/lib/styles.scss";
-import {
-  Amount,
-  MERCHANT_AUTH,
-  MERCHANT_PASSWORD,
-  MERCHANT_USERNAME_ID,
-} from "./constants";
+
 import { useEffect } from "react";
-import { getAccessToken, getCardServiceId, getPaymentServices } from "./api";
+import { getPaymentServices, makeCollection } from "./api";
 
 export default function Home() {
   //NOTE - useform
-  const { register, handleSubmit, reset, watch, formState } = useForm({
-    mode: "onChange",
-    resolver: yupResolver(validationSchema),
-    defaultValues: defaultFormValues,
-  });
+  const { register, handleSubmit, reset, watch, formState, setValue } = useForm(
+    {
+      mode: "onChange",
+      resolver: yupResolver(validationSchema),
+      defaultValues: defaultFormValues,
+    }
+  );
 
-  const onSubmit = (values) => {
-    console.log(values);
-    try {
-    } catch (error) {}
+  const onSubmit = async (values) => {
+    if(values){
+
+      const data = {
+        narration: `${values.name} pays GHS${values.amount}`,
+        ...values
+      }
+      console.log(data);
+      // try {
+    }
+    //   const response = await makeCollection();
+    // } catch (error) {}
   };
 
-  const getAccessTokenHandler = async () => {
+  const getPaymentServicesHandler = async () => {
     try {
-      const response = await getAccessToken();
-      // console.log(response);
+      const response = await getPaymentServices();
+      if (response.Status) {
+        const serviceId =
+          response?.PaymentTypesAndSvcList[2]?.PayPartnerServiceId;
+        setValue("serviceId", serviceId);
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getAccessTokenHandler();
-    getPaymentServices()
+    setValue("amount", 2);
+    getPaymentServicesHandler();
   }, []);
   return (
     <form
@@ -51,7 +60,7 @@ export default function Home() {
       <h1 className="text-center font-semibold text-md mb-5 text-gray-500">
         Enter your card details to pay
       </h1>
-      <div className="flex flex-wrap -mx-3 mb-4">
+      <div className="flex flex-wrap -mx-3 mb-2">
         <div className="w-full px-3 relative">
           <label
             className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2 relative "
@@ -64,20 +73,20 @@ export default function Home() {
             className={clsx({
               "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
               "border-green-500 border-2":
-                formState.dirtyFields?.cardNumber &&
-                !!!formState.errors?.cardNumber === true,
+                formState.dirtyFields?.accountNoOrCardNoOrMSISDN &&
+                !!!formState.errors?.accountNoOrCardNoOrMSISDN === true,
               "border-red-500 border-2":
-                !!formState.errors?.cardNumber === true,
+                !!formState.errors?.accountNoOrCardNoOrMSISDN === true,
             })}
             id=""
             type="number"
-            {...register("cardNumber")}
+            {...register("accountNoOrCardNoOrMSISDN")}
             placeholder="0000 0000 0000 0000"
           />
 
           <div className="card absolute -top-[45px] -right-[100px]">
             <Cards
-              number={watch("cardNumber")}
+              number={watch("accountNoOrCardNoOrMSISDN")}
               expiry={27}
               cvc={watch("cvv")}
               name={"leonard adjei"}
@@ -85,9 +94,40 @@ export default function Home() {
               // focused={state.focus}
             />
           </div>
-          {formState?.errors?.cardNumber?.message && (
+          {formState?.errors?.accountNoOrCardNoOrMSISDN?.message && (
             <p className="text-sm text-red-500">
-              {formState?.errors?.cardNumber?.message}
+              {formState?.errors?.accountNoOrCardNoOrMSISDN?.message}
+            </p>
+          )}
+        </div>
+      </div>
+
+      <div className="flex flex-wrap -mx-3 mb-2">
+        <div className="w-full px-3 ">
+          <label
+            className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2  "
+            for="grid-password"
+          >
+            Full name
+          </label>
+
+          <input
+            className={clsx({
+              "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
+              "border-green-500 border-2":
+                formState.dirtyFields?.name &&
+                !!!formState.errors?.name === true,
+              "border-red-500 border-2": !!formState.errors?.name === true,
+            })}
+            id=""
+            type="text"
+            {...register("name")}
+            placeholder="Enter your name"
+          />
+
+          {formState?.errors?.name?.message && (
+            <p className="text-sm text-red-500">
+              {formState?.errors?.name?.message}
             </p>
           )}
         </div>
@@ -98,7 +138,7 @@ export default function Home() {
             className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2 "
             for="grid-first-name"
           >
-            EXPIRY MONTH
+            EXP MONTH
           </label>
           <input
             className={clsx({
@@ -122,7 +162,7 @@ export default function Home() {
         </div>
         <div className="w-full md:w-1/3 px-3 mb-4">
           <label className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2">
-            EXPIRY YEAR
+            EXP YEAR
           </label>
           <input
             className={clsx({
