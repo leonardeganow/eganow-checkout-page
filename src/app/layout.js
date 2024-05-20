@@ -34,10 +34,11 @@ export default function RootLayout({ children }) {
                 <li className="font-bold uppercase  hidden sm:block  py-2 my-2 pl-2">
                   pay with{" "}
                 </li>
+                <hr className="border-gray-300"/>
                 <LeftNav />
               </ul>
             </div>
-            <div className=" sm:min-w-[70%] w-full shadow-xl p-5 ">
+            <div className=" sm:min-w-[70%] border border-black min-h-[55vh] w-full shadow-xl p-5 ">
               <div className="flex gap-1 justify-between items-center">
                 <Image
                   src={logo}
@@ -55,7 +56,7 @@ export default function RootLayout({ children }) {
                   {/* <h1>demo@eganow.com</h1> */}
                   <p className="">
                     Pay{" "}
-                    <span className="text-green-500 font-medium">
+                    <span className="text-blue-500 font-medium">
                       GHS {amount}
                     </span>
                   </p>

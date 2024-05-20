@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { getAccessToken, getPaymentServices, makeCollection } from "./api";
 import { Rings } from "react-loader-spinner";
 import { Amount } from "./constants";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   //NOTE - useform
@@ -22,6 +23,7 @@ export default function Home() {
       defaultValues: defaultFormValues,
     }
   );
+  const router = useRouter();
 
   const nanoid = customAlphabet("0123456789", 12);
 
@@ -34,9 +36,12 @@ export default function Home() {
       ...values,
     };
 
-    console.log(data);
+    // console.log(data);
     try {
       const response = await makeCollection(data);
+      if (response.Status && response.TransStatus == "PENDING") {
+        router.push("/processing");
+      }
       console.log(response);
     } catch (error) {
       console.log(error);

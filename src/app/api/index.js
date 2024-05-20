@@ -6,11 +6,9 @@ import {
   MERCHANT_USERNAME_ID,
 } from "../constants";
 
-
-
 /**
  * GET ACCESS TOKEN
- * @returns 
+ * @returns
  */
 export async function getAccessToken() {
   try {
@@ -21,47 +19,45 @@ export async function getAccessToken() {
         "Content-Type": "application/json", // Adjust content type as needed
       },
     });
-    localStorage.setItem('token', data.data.Token)
-    console.log( data.data);
+    localStorage.setItem("token", data.data.Token);
+    console.log(data.data);
     return data;
   } catch (error) {
-    throw new Error(error);
+    throw error;
   }
 }
 
-
 /**
  * LIST PAYMENT SERVICES
- * @returns 
+ * @returns
  */
 export async function getPaymentServices() {
   // Get Bearer token from localStorage
-  const BEARER_TOKEN = localStorage.getItem('token');
+  const BEARER_TOKEN = localStorage.getItem("token");
   try {
     // Make the request with the Bearer token in the Authorization header
     const response = await axios.post(
       `${BASE_URL}/enquiry/collectionservices`,
       {
         LanguageId: "En",
-        CountryCode: "GH0233"
+        CountryCode: "GH0233",
       },
       {
         headers: {
-          'Authorization': `Bearer ${BEARER_TOKEN}`,
-          'Content-Type': 'application/json',
-          'X-Auth': MERCHANT_AUTH,
-        }
+          Authorization: `Bearer ${BEARER_TOKEN}`,
+          "Content-Type": "application/json",
+          "X-Auth": MERCHANT_AUTH,
+        },
       }
     );
     console.log(response.data);
     return response.data;
   } catch (error) {
     // Handle errors here
-    console.error('Error:', error);
+    console.error("Error:", error);
     throw error; // Rethrow the error to be caught by the caller
   }
 }
-
 
 /** GET ACCOUNT HOLDER API
  * @params {
@@ -71,7 +67,7 @@ export async function getPaymentServices() {
  */
 export async function getAccHolderInfo(data) {
   // Get Bearer token from localStorage
-  const BEARER_TOKEN = localStorage.getItem('token');
+  const BEARER_TOKEN = localStorage.getItem("token");
   try {
     // Make the request with the Bearer token in the Authorization header
     const response = await axios.post(
@@ -80,99 +76,97 @@ export async function getAccHolderInfo(data) {
         LanguageId: "En",
         CountryCode: "GH0233",
         CustomerAcctNo: "233558628473" || data?.customerAccNo,
-        PayPartnerServiceId: "MTNMOMGH0233SC1001000101" ||  data?.serviceId,
+        PayPartnerServiceId: "MTNMOMGH0233SC1001000101" || data?.serviceId,
       },
       {
         headers: {
-          'Authorization': `Bearer ${BEARER_TOKEN}`,
-          'Content-Type': 'application/json',
-          'X-Auth': MERCHANT_AUTH,
-        }
+          Authorization: `Bearer ${BEARER_TOKEN}`,
+          "Content-Type": "application/json",
+          "X-Auth": MERCHANT_AUTH,
+        },
       }
     );
     console.log(response.data);
     return response.data;
   } catch (error) {
     // Handle errors here
-    console.error('Error:', error);
+    console.error("Error:", error);
     throw error; // Rethrow the error to be caught by the caller
   }
 }
 
-
 /**
- * 
+ *
  * @param {* }
- * @returns 
+ * @returns
  */
 export async function makeCollection(data) {
   // Get Bearer token from localStorage
-  const BEARER_TOKEN = localStorage.getItem('token');
+  const BEARER_TOKEN = localStorage.getItem("token");
   console.log(data);
   try {
     // Make the request with the Bearer token in the Authorization header
     const response = await axios.post(
       `${BASE_URL}/transfer/debitaccount`,
       {
-        "PayPartnerServiceId": data?.serviceId,
-        "Amount": data?.amount,
-        "AccountNoOrCardNoOrMSISDN": data.accountNoOrCardNoOrMSISDN,
-        "AccountName": data?.name || "",
-        "TransactionId": data?.transactionId,
-        "Narration": data?.narration,
-        "TransCurrencyIso": "GHS",
-        "ExpiryDateMonth": data?.expiryMonth || 0,
-        "ExpiryDateYear": data?.expiryYear || 0,
-        "Cvv": data?.cvv || 0,
-        "LanguageId": "En"
+        PayPartnerServiceId: data?.serviceId,
+        Amount: data?.amount,
+        AccountNoOrCardNoOrMSISDN: data.accountNoOrCardNoOrMSISDN,
+        AccountName: data?.name || "",
+        TransactionId: data?.transactionId,
+        Narration: data?.narration,
+        TransCurrencyIso: "GHS",
+        ExpiryDateMonth: data?.expiryMonth || 0,
+        ExpiryDateYear: data?.expiryYear || 0,
+        Cvv: data?.cvv || 0,
+        LanguageId: "En",
       },
       {
         headers: {
-          'Authorization': `Bearer ${BEARER_TOKEN}`,
-          'Content-Type': 'application/json',
-          'X-Auth': MERCHANT_AUTH,
-        }
+          Authorization: `Bearer ${BEARER_TOKEN}`,
+          "Content-Type": "application/json",
+          "X-Auth": MERCHANT_AUTH,
+        },
       }
     );
-    localStorage.setItem('transactionId', data?.transactionId)
+    localStorage.setItem("transactionId", data?.transactionId);
     return response.data;
   } catch (error) {
     // Handle errors here
-    console.error('Error:', error);
+    console.error("Error:", error);
     throw error; // Rethrow the error to be caught by the caller
   }
 }
 
-
 /**
  * GET THE TRANSACTION STATUS
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @returns
  */
 export async function getTransactionStatus(data) {
   // Get Bearer token from localStorage
-  const BEARER_TOKEN = localStorage.getItem('token');
+  const BEARER_TOKEN = localStorage.getItem("token");
   try {
     // Make the request with the Bearer token in the Authorization header
     const response = await axios.post(
       `${BASE_URL}/transfer/transstatus`,
       {
-        "TransactionId": data.transactionId,
-        "LanguageId": "En"
+        TransactionId: data.transactionId,
+        LanguageId: "En",
       },
       {
         headers: {
-          'Authorization': `Bearer ${BEARER_TOKEN}`,
-          'Content-Type': 'application/json',
-          'X-Auth': MERCHANT_AUTH,
-        }
+          Authorization: `Bearer ${BEARER_TOKEN}`,
+          "Content-Type": "application/json",
+          "X-Auth": MERCHANT_AUTH,
+        },
       }
     );
     console.log(response.data);
     return response.data;
   } catch (error) {
     // Handle errors here
-    console.error('Error:', error);
+    console.error("Error:", error);
     throw error; // Rethrow the error to be caught by the caller
   }
 }

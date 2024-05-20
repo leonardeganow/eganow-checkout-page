@@ -29,7 +29,7 @@ export default function LeftNav() {
     return items.map((item) => {
       return (
         <Link href={item.href} key={item.id} className="hover:bg-emerald-900" >
-          <hr className=" border-gray-200"/>
+          {/* <hr className=" border-gray-300"/> */}
 
           <li className={clsx({
             "font-medium  p-2 my-4  rounded  ": true,
@@ -48,7 +48,7 @@ export default function LeftNav() {
             {pathname === item.href &&  <GoDotFill className="hidden sm:block" />}
             </div>
           </li>
-          <hr className=" border-gray-200"/>
+          <hr className=" border-gray-300"/>
         </Link>
       );
     });
