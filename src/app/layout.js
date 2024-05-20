@@ -34,7 +34,7 @@ export default function RootLayout({ children }) {
                 <li className="font-bold uppercase  hidden sm:block  py-2 my-2 pl-2">
                   pay with{" "}
                 </li>
-                <hr className="border-gray-300"/>
+                <hr className="border-gray-300" />
                 <LeftNav />
               </ul>
             </div>
