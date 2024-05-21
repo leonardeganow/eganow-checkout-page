@@ -5,19 +5,27 @@ import React, { useEffect, useState } from "react";
 import Pending from "../components/Pending";
 import Success from "../components/Success";
 import Failed from "../components/Failed";
+import axios from "axios";
 
 function Page() {
-  // const savedTransactionId = localStorage.getItem("transactionId");
+  const savedTransactionId = localStorage.getItem("transactionId");
+  const token = localStorage.getItem("token");
   const [transactionStatus, setTransactionStatus] = useState("PENDING");
 
   // FUNCTION TO CHECK TRANSACTION STATUS
   const getStats = async () => {
+    console.log(savedTransactionId);
+    const data={
+      token: token,
+      transactionId : savedTransactionId
+    }
     try {
-      const resp = await getTransactionStatus(savedTransactionId);
-      return resp.data.TransStatus;
-    } catch (err) {
-      console.error(err);
-      return "failed";
+      const response = await axios.post("/api/transactionstatus/",data)
+      console.log(response.data.data)
+      return response.data.data.TransStatus
+    } catch (error) {
+      console.error(error)
+      return false
     }
   };
 

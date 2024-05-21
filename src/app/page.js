@@ -13,7 +13,7 @@ import { Rings } from "react-loader-spinner";
 import { Amount } from "./constants";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { setCookie } from "cookies-next";
+// import { setCookie } from "cookies-next";
 
 export default function Home() {
   const [token, setToken] = useState(false);

@@ -66,6 +66,7 @@ function Page() {
     };
     try {
       const response = await axios.post("/api/makecollection/", data);
+      localStorage.setItem('transactionId',transactionId)
       if (
         response.data.data.Status &&
         response.data.data.TransStatus == "PENDING"

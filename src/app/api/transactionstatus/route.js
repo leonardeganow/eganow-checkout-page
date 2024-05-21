@@ -9,6 +9,7 @@ import { NextResponse } from "next/server";
 export const dynamic = "force-dynamic"; // defaults to auto
 export async function POST(request) {
   const res = await request.json();
+  console.log(res);
   try {
     const response = await axios.post(
       `${BASE_URL}/transfer/transstatus`,
