@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>{children}</body> */}
       <body className="grid place-items-center h-screen bg-[#304767] login-bg ">
         <div className="w-full grid place-items-center ">
-          <div className="flex  lg:w-[33%] w-[90%] mt-10 sm:mt-0  rounded-lg drop-shadow-xl bg-white ">
+          <div className="flex  lg:w-[33%] w-[90%] sm:w-[60%] mt-10 sm:mt-0  rounded-lg drop-shadow-xl bg-white ">
             <div className="  sm:min-w-[25%] w-[20%] bg-[#CF122B] text-white rounded-s-lg">
               <ul className="  flex flex-col   p-4  ">
                 <li className="font-bold uppercase  hidden sm:block  py-2 my-2 pl-2">

@@ -6,32 +6,56 @@ import Pending from "../components/Pending";
 import Success from "../components/Success";
 import Failed from "../components/Failed";
 import axios from "axios";
+import dynamic from 'next/dynamic'
+ 
+// const Pending = dynamic(() => import('../components/Pending'), {
+//   ssr: false,
+// })
+// const Failed = dynamic(() => import('../components/Failed'), {
+//   ssr: false,
+// })
+// const Success = dynamic(() => import('../components/Success'), {
+//   ssr: false,
+// })
 
 function Page() {
-  const savedTransactionId = localStorage.getItem("transactionId");
-  const token = localStorage.getItem("token");
+
   const [transactionStatus, setTransactionStatus] = useState("PENDING");
+  const [savedTransactionId, setSavedTransactionId] = useState("");
+  const [token, setToken] = useState("");
   const statusRef = useRef(transactionStatus);
+
+
+
+  // const savedTransactionId = '';
+  // const token = '';
+  // const savedTransactionId = localStorage.getItem("transactionId");
+  // const token = localStorage.getItem("token");
 
   // FUNCTION TO CHECK TRANSACTION STATUS
   const getStats = async () => {
-    const data={
+
+    const data = {
       token: token,
-      transactionId : savedTransactionId
-    }
+      transactionId: savedTransactionId,
+    };
+
+    console.log(data);
     try {
-      const response = await axios.post("/api/transactionstatus/",data)
-      return response.data.data.TransStatus
+      const response = await axios.post("/api/transactionstatus/", data);
+      return response.data.data.TransStatus;
     } catch (error) {
-      console.error(error)
-      return false
+      console.error(error);
+      return false;
     }
   };
 
-  console.log(transactionStatus);
+  // console.log(transactionStatus);
 
   useEffect(() => {
     statusRef.current = transactionStatus;
+    setSavedTransactionId(localStorage.getItem("transactionId"))
+    setToken(localStorage.getItem("token"))
   }, [transactionStatus]);
 
   useEffect(() => {
@@ -39,16 +63,14 @@ function Page() {
       const status = await getStats();
       setTransactionStatus(status);
 
-      if (status === 'SUCCESSFUL' || status === 'FAILED') {
+      if (status === "SUCCESSFUL" || status === "FAILED") {
         clearInterval(interval);
       }
     }, 5000); // Check every 5 seconds
 
     // Clean up interval on component unmount
     return () => clearInterval(interval);
-  }, []);
-
-
+  }, [savedTransactionId,token]);
 
   const renderStatusComponent = () => {
     switch (transactionStatus) {

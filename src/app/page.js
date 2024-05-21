@@ -205,7 +205,7 @@ export default function Home() {
           )}
         </div>
         <div className="   mb-4">
-          <label className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2">
+          <label className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2 truncate">
             EXP YEAR
           </label>
           <input
@@ -228,7 +228,7 @@ export default function Home() {
           )}
         </div>
         <div className="  ">
-          <label className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2">
+          <label className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2 truncate">
             CARD CVV
           </label>
           <input
