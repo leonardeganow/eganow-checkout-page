@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import clsx from "clsx";
@@ -47,11 +47,42 @@ function Page() {
     resolver: yupResolver(validationSchema),
     defaultValues: defaultFormValues,
   });
+  const [momoName, setMomoName] = useState('')
+  const [nameLoading,setNameLoading] = useState(false)
 
   // HANDLE SELECT OPTION
   const handleSelectChange = (selectedOption) => {
     setValue("provider", selectedOption[0]?.value);
   };
+
+  const number = (watch('momoNumber'))
+  const network = (watch('provider'))
+
+  if(number || network){
+    ()=>setNameLoading(true)
+  }
+
+
+  const accountHolder = async () => {
+    const data = {
+      serviceId: network,
+      accountNoOrCardNoOrMSISDN: number,
+      token: localStorage.getItem("token"),
+    }
+    try {
+      const response = await axios.post('/api/getKyc', data)
+      setMomoName(response?.data?.data.AccountName)
+      setNameLoading(false)
+
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    accountHolder()
+  }, [number, network])
+
 
   // HANDLE FORM SUBMISSION
   const onSubmit = async (values) => {
@@ -62,11 +93,13 @@ function Page() {
       transactionId: transactionId,
       narration: "Payment of goods and services",
       amount: Amount,
+      accountName: momoName,
       token: localStorage.getItem("token"),
     };
     try {
+      
       const response = await axios.post("/api/makecollection/", data);
-      localStorage.setItem('transactionId',transactionId)
+      localStorage.setItem('transactionId', transactionId)
       if (
         response.data.data.Status &&
         response.data.data.TransStatus == "PENDING"
@@ -94,7 +127,7 @@ function Page() {
           payment
         </small>
 
-        <div className="w-[80%]">
+        <div className="w-[70%]">
           <div className="w-full relative mb-5">
             <label
               className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2 relative "
@@ -105,7 +138,7 @@ function Page() {
 
             <input
               className={clsx({
-                "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
+                "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded p-2  mb-3 leading-tight focus:outline-none focus:bg-white ": true,
                 "border-green-500 border-2":
                   formState.dirtyFields?.momoNumber &&
                   !!!formState.errors?.momoNumber === true,
@@ -125,6 +158,8 @@ function Page() {
             )}
           </div>
 
+
+
           <div className="mb-5">
             <Select
               options={options}
@@ -132,11 +167,11 @@ function Page() {
               onChange={handleSelectChange}
               placeholder="Choose a provider"
               color="#e5e7ebff"
-              className="bg-gray-200 py-3 rounded-lg border-0 outline-none focus:outline-none text-gray-800"
+              className="bg-gray-200 rounded-lg border-0 outline-none focus:outline-none text-gray-800"
               style={{
                 outline: "none",
                 borderRadius: "3px",
-                padding: "10px",
+                padding: "5px",
               }}
             />
 
@@ -146,6 +181,38 @@ function Page() {
               </small>
             )}
           </div>
+
+
+         
+          <div className="flex flex-wrap -mx-3 mb-2">
+            <div className="w-full px-3 ">
+
+              <input
+                className={clsx({
+                  "appearance-none block font-md text-md w-full bg-gray-200 text-gray-700 border border-gray-200 rounded p-2 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
+                  "border-green-500 border-2":
+                    formState.dirtyFields?.name &&
+                    !!!formState.errors?.name === true,
+                  "border-red-500 border-2": !!formState.errors?.name === true,
+                })}
+                id=""
+                type="text"
+                {...register("name")}
+                placeholder="Momo name"
+                value={nameLoading ? 'Loading...': momoName}
+                disabled
+              />
+
+              {formState?.errors?.name?.message && (
+                <p className="text-sm text-red-500">
+                  {formState?.errors?.name?.message}
+                </p>
+              )}
+            </div>
+          </div>
+
+
+          
 
           <button
             type="submit"
