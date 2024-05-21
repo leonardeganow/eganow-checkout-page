@@ -152,7 +152,7 @@ export default function Home() {
             className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2  "
             htmlFor="grid-password"
           >
-            Full name
+            Name on card
           </label>
 
           <input
