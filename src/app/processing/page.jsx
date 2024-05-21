@@ -1,13 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import { getTransactionStatus } from "../api";
+// import { getTransactionStatus } from "../api/token/route";
 import Pending from "../components/Pending";
 import Success from "../components/Success";
 import Failed from "../components/Failed";
 
-function page() {
-  const savedTransactionId = localStorage.getItem("transactionId");
+function Page() {
+  // const savedTransactionId = localStorage.getItem("transactionId");
   const [transactionStatus, setTransactionStatus] = useState("PENDING");
 
   // FUNCTION TO CHECK TRANSACTION STATUS
@@ -45,4 +45,4 @@ function page() {
   return <div>{renderStatusComponent()}</div>;
 }
 
-export default page;
+export default Page;

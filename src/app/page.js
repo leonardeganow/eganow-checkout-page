@@ -8,13 +8,15 @@ import { GiTakeMyMoney } from "react-icons/gi";
 import Cards from "react-credit-cards-2";
 import "react-credit-cards-2/dist/lib/styles.scss";
 import { customAlphabet } from "nanoid";
-import { useEffect } from "react";
-import { getAccessToken, getPaymentServices, makeCollection } from "./api";
+import { useEffect, useState } from "react";
 import { Rings } from "react-loader-spinner";
 import { Amount } from "./constants";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import { setCookie } from "cookies-next";
 
 export default function Home() {
+  const [token, setToken] = useState(false);
   //NOTE - useform
   const { register, handleSubmit, reset, watch, formState, setValue } = useForm(
     {
@@ -29,45 +31,65 @@ export default function Home() {
 
   const onSubmit = async (values) => {
     const transactionId = nanoid(); //GENERATE TRANSACTION ID
-
     const data = {
       narration: `${values.name} pays GHS${values.amount}`,
       transactionId,
+      token: localStorage.getItem("token"),
       ...values,
     };
-
     // console.log(data);
     try {
-      const response = await makeCollection(data);
-      if (response.Status && response.TransStatus == "PENDING") {
-        router.push("/processing");
-      }
-      console.log(response);
+      const response = await axios.post("/api/makecollection/", data);
+      // if (response.Status && response.TransStatus == "PENDING") {
+      //   router.push("/processing");
+      // }
+      console.log(response.data.data);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const getPaymentServicesHandler = async () => {
+  const getAccessTokenHandler = async () => {
     try {
-      const response = await getPaymentServices();
-      if (response.Status) {
+      const response = await fetch("/api/token");
+      const data = await response.json();
+      console.log(data.data.Token);
+      setToken(data.data.Token);
+      localStorage.setItem("token", data.data.Token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getPaymethods = async () => {
+    const body = {
+      token: localStorage.getItem("token"),
+    };
+    try {
+      const response = await axios.post(`/api/paymentmethods/`, body);
+      // console.log(response.data.data.Status);
+      // console.log(response.data.data);
+      if (response?.data?.data?.Status) {
         const serviceId =
-          response?.PaymentTypesAndSvcList[3]?.PayPartnerServiceId;
+          response?.data?.data?.PaymentTypesAndSvcList[3]?.PayPartnerServiceId;
         setValue("serviceId", serviceId || "PAYMENTCARDGATEWAY");
       } else {
         setValue("serviceId", "PAYMENTCARDGATEWAY");
       }
     } catch (error) {
-      console.log(error);
+      console.error;
     }
   };
 
   useEffect(() => {
     setValue("amount", Amount);
-    getAccessToken();
-    getPaymentServicesHandler();
+    getAccessTokenHandler();
+    getPaymethods();
   }, []);
+
+  useEffect(() => {
+    getPaymethods();
+  }, [token]);
 
   return (
     <form

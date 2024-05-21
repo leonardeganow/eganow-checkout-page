@@ -11,12 +11,12 @@ import { validationSchema } from "./validationSchema";
 import { GiTakeMyMoney } from "react-icons/gi";
 import { MdMobileScreenShare } from "react-icons/md";
 
-import { customAlphabet } from 'nanoid';
-import { getAccHolderInfo, makeCollection } from "../api";
+import { customAlphabet } from "nanoid";
+// import { getAccHolderInfo, makeCollection } from "../api/token/route";
 import { Amount } from "../constants";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 import { Rings } from "react-loader-spinner";
-
+import axios from "axios";
 
 const options = [
   {
@@ -30,9 +30,9 @@ const options = [
 ];
 
 function Page() {
-  const router = useRouter()
+  const router = useRouter();
   // INITIALIZE NANOID
-  const nanoid = customAlphabet('0123456789', 12);
+  const nanoid = customAlphabet("0123456789", 12);
 
   const {
     register,
@@ -54,26 +54,29 @@ function Page() {
   };
 
   // HANDLE FORM SUBMISSION
-  const onSubmit = async(values) => {
-      const transactionId = nanoid(); //GENERATE TRANSACTION ID
-      const data = {
-        ServiceId : values.provider,
-        accountNoOrCardNoOrMSISDN : values.momoNumber,
-        transactionId : transactionId,
-        narration : 'Payment of goods and services',
-        amount : Amount
+  const onSubmit = async (values) => {
+    const transactionId = nanoid(); //GENERATE TRANSACTION ID
+    const data = {
+      serviceId: values.provider,
+      accountNoOrCardNoOrMSISDN: values.momoNumber,
+      transactionId: transactionId,
+      narration: "Payment of goods and services",
+      amount: Amount,
+      token: localStorage.getItem("token"),
+    };
+    try {
+      const response = await axios.post("/api/makecollection/", data);
+      if (
+        response.data.data.Status &&
+        response.data.data.TransStatus == "PENDING"
+      ) {
+        router.push("/processing");
       }
-      try {
-        const response = await makeCollection(data);
-        if(response.Status && response.TransStatus == "PENDING"){
-          router.push('/processing')
-        }
-        console.log(response)
-      } catch (error) {
-        console.error(error)
-      }
+      // console.log(response.data.data)
+    } catch (error) {
+      console.error(error);
+    }
   };
-
 
   return (
     <div className="">
@@ -91,11 +94,10 @@ function Page() {
         </small>
 
         <div className="w-[80%]">
-          
           <div className="w-full relative mb-5">
             <label
               className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2 relative "
-              for="grid-password"
+              htmlFor="grid-password"
             >
               Momo Number
             </label>
@@ -145,27 +147,27 @@ function Page() {
           </div>
 
           <button
-        type="submit"
-        disabled={formState.isSubmitting}
-        className="bg-[#1f8fff] w-full flex justify-center items-center  text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
-      >
-        {formState.isSubmitting ? (
-          <Rings
-            visible={true}
-            height="30"
-            width="30"
-            color="white"
-            ariaLabel="rings-loading"
-            wrapperStyle={{}}
-            wrapperClass=""
-          />
-        ) : (
-          <div className="flex justify-center items-center gap-2">
-            <GiTakeMyMoney size={25} />
-            Pay
-          </div>
-        )}
-      </button>
+            type="submit"
+            disabled={formState.isSubmitting}
+            className="bg-[#1f8fff] w-full flex justify-center items-center  text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
+          >
+            {formState.isSubmitting ? (
+              <Rings
+                visible={true}
+                height="30"
+                width="30"
+                color="white"
+                ariaLabel="rings-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            ) : (
+              <div className="flex justify-center items-center gap-2">
+                <GiTakeMyMoney size={25} />
+                Pay
+              </div>
+            )}
+          </button>
 
           {/* <button
             type="submit"
@@ -181,12 +183,9 @@ function Page() {
         </small> */}
       </form>
 
-
       {/* <section className="flex justify-center items-center">
         Loading...
       </section> */}
-
-
     </div>
   );
 }
