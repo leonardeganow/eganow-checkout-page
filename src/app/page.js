@@ -40,10 +40,15 @@ export default function Home() {
     // console.log(data);
     try {
       const response = await axios.post("/api/makecollection/", data);
-      // if (response.Status && response.TransStatus == "PENDING") {
-      //   router.push("/processing");
-      // }
-      console.log(response.data.data);
+      localStorage.setItem('transactionId',transactionId)
+      if (
+        response.data.data.Status &&
+        response.data.data.TransStatus == "PENDING"
+      ) {
+        router.push("/processing");
+        localStorage.setItem("3ds", response.data.data.Extra);
+      }
+      // console.log(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -53,7 +58,7 @@ export default function Home() {
     try {
       const response = await fetch("/api/token");
       const data = await response.json();
-      console.log(data.data.Token);
+      // console.log(data.data.Token);
       setToken(data.data.Token);
       localStorage.setItem("token", data.data.Token);
     } catch (error) {
@@ -96,7 +101,7 @@ export default function Home() {
       onSubmit={handleSubmit(onSubmit)}
       className="w-full max-w-lg mt-5 pb-5 "
     >
-      <h1 className="text-center font-semibold text-md mb-5 text-gray-500">
+      <h1 className="text-center font-semibold text-md mb-3 text-gray-500">
         Enter your card details to pay
       </h1>
       <div className="flex flex-wrap -mx-3 mb-2">
@@ -110,7 +115,7 @@ export default function Home() {
 
           <input
             className={clsx({
-              "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
+              "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
               "border-green-500 border-2":
                 formState.dirtyFields?.accountNoOrCardNoOrMSISDN &&
                 !!!formState.errors?.accountNoOrCardNoOrMSISDN === true,
@@ -123,7 +128,7 @@ export default function Home() {
             placeholder="0000 0000 0000 0000"
           />
 
-          <div className="card absolute -top-[45px] -right-[100px]">
+          <div className="card absolute -top-[49px] -right-[100px]">
             <Cards
               number={watch("accountNoOrCardNoOrMSISDN")}
               expiry={27}
@@ -152,7 +157,7 @@ export default function Home() {
 
           <input
             className={clsx({
-              "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
+              "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2  px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
               "border-green-500 border-2":
                 formState.dirtyFields?.name &&
                 !!!formState.errors?.name === true,
@@ -171,17 +176,17 @@ export default function Home() {
           )}
         </div>
       </div>
-      <div className="flex flex-wrap -mx-3 mb-4">
-        <div className="w-full md:w-1/3 px-3 mb-4 md:mb-0">
+      <div className="grid grid-cols-3 gap-3 mb-2 ">
+        <div className=" mb-4 md:mb-0 ">
           <label
-            className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2 "
+            className=" block uppercase tracking-wide text-gray-500 text-xs md: font-medium mb-2 truncate "
             htmlFor="grid-first-name"
           >
             EXP MONTH
           </label>
           <input
             className={clsx({
-              "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
+              "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2  px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
               "border-green-500 border-2":
                 formState.dirtyFields?.expiryMonth &&
                 !!!formState.errors?.expiryMonth === true,
@@ -194,18 +199,18 @@ export default function Home() {
             {...register("expiryMonth")}
           />
           {formState?.errors?.expiryMonth?.message && (
-            <p className="text-sm text-red-500">
-              {formState?.errors?.expiryMonth?.message}
+            <p className="text-sm text-red-500 hidden sm:block">
+              {formState?.errors?.expiryMonth?.message}hidden sm:block
             </p>
           )}
         </div>
-        <div className="w-full md:w-1/3 px-3 mb-4">
+        <div className="   mb-4">
           <label className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2">
             EXP YEAR
           </label>
           <input
             className={clsx({
-              "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
+              "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2  px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
               "border-green-500 border-2":
                 formState.dirtyFields?.expiryYear &&
                 !!!formState.errors?.expiryYear === true,
@@ -217,18 +222,18 @@ export default function Home() {
             {...register("expiryYear")}
           />
           {formState?.errors?.expiryYear?.message && (
-            <p className="text-sm text-red-500">
+            <p className="text-sm text-red-500 hidden sm:block">
               {formState?.errors?.expiryYear?.message}
             </p>
           )}
         </div>
-        <div className="w-full md:w-1/3 px-3">
+        <div className="  ">
           <label className=" block uppercase tracking-wide text-gray-500 text-xs font-medium mb-2">
             CARD CVV
           </label>
           <input
             className={clsx({
-              "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
+              "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2  px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
               "border-green-500 border-2":
                 formState.dirtyFields?.cvv && !!!formState.errors?.cvv === true,
               "border-red-500 border-2": !!formState.errors?.cvv === true,
@@ -238,7 +243,7 @@ export default function Home() {
             {...register("cvv")}
           />
           {formState?.errors?.cvv?.message && (
-            <p className="text-sm text-red-500">
+            <p className="text-sm text-red-500 hidden sm:block">
               {formState?.errors?.cvv?.message}
             </p>
           )}
@@ -248,7 +253,7 @@ export default function Home() {
       <button
         type="submit"
         disabled={formState.isSubmitting}
-        className="bg-[#1f8fff] w-full flex justify-center items-center  text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
+        className="bg-[#1f8fff] w-full flex justify-center items-center  text-white p-2 rounded-lg cursor-pointer active:bg-green-800"
       >
         {formState.isSubmitting ? (
           <Rings

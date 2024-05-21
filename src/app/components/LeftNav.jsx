@@ -41,11 +41,11 @@ export default function LeftNav() {
           }}
           >
             <div className="flex justify-center sm:justify-between items-center ">
-              <div className="flex items-center gap-x-2  ">
+              <div className="flex items-center gap-x-1  ">
                 {item.icon}
                 <p className="hidden sm:block">{item.title}</p>
               </div>
-            {pathname === item.href &&  <GoDotFill className="hidden sm:block" />}
+            {/* {pathname === item.href &&  <GoDotFill size={15} className="hidden sm:block" />} */}
             </div>
           </li>
           <hr className=" border-gray-300"/>
