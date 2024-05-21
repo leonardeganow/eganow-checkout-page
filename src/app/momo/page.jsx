@@ -47,42 +47,41 @@ function Page() {
     resolver: yupResolver(validationSchema),
     defaultValues: defaultFormValues,
   });
-  const [momoName, setMomoName] = useState('')
-  const [nameLoading,setNameLoading] = useState(false)
+  const [momoName, setMomoName] = useState("");
+  const [nameLoading, setNameLoading] = useState(false);
 
   // HANDLE SELECT OPTION
   const handleSelectChange = (selectedOption) => {
     setValue("provider", selectedOption[0]?.value);
   };
 
-  const number = (watch('momoNumber'))
-  const network = (watch('provider'))
+  const number = watch("momoNumber");
+  const network = watch("provider");
 
-  if(number || network){
-    ()=>setNameLoading(true)
-  }
-
+  
 
   const accountHolder = async () => {
     const data = {
       serviceId: network,
       accountNoOrCardNoOrMSISDN: number,
       token: localStorage.getItem("token"),
-    }
+    };
     try {
-      const response = await axios.post('/api/getKyc', data)
-      setMomoName(response?.data?.data.AccountName)
-      setNameLoading(false)
-
+      const response = await axios.post("/api/getKyc", data);
+      setMomoName(response?.data?.data.AccountName);
+      setNameLoading(false);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   useEffect(() => {
-    accountHolder()
-  }, [number, network])
-
+    localStorage.removeItem("3ds");
+    if (number && network) {
+   setNameLoading(true);
+    }
+    accountHolder();
+  }, [number, network]);
 
   // HANDLE FORM SUBMISSION
   const onSubmit = async (values) => {
@@ -93,13 +92,12 @@ function Page() {
       transactionId: transactionId,
       narration: "Payment of goods and services",
       amount: Amount,
-      accountName: momoName,
+      name: momoName,
       token: localStorage.getItem("token"),
     };
     try {
-      
       const response = await axios.post("/api/makecollection/", data);
-      localStorage.setItem('transactionId', transactionId)
+      localStorage.setItem("transactionId", transactionId);
       if (
         response.data.data.Status &&
         response.data.data.TransStatus == "PENDING"
@@ -119,22 +117,22 @@ function Page() {
       </div>
 
       <form
-        className="flex flex-col items-center justify-center mb-10 "
+        className="flex flex-col items-center justify-center  mb-5  "
         onSubmit={handleSubmit(onSubmit)}
       >
-        <small className="text-center text-xs text-gray-400 block lg:px-10 p-3">
+        <small className="text-center text-xs text-gray-400 block  p-3">
           Enter your mobile money number and select a provider to start your
           payment
         </small>
 
-        <div className="w-[70%]">
+        <div className="sm:w-[80%] w-full">
           <div className="w-full relative mb-5">
-            <label
+            {/* <label
               className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2 relative "
               htmlFor="grid-password"
             >
               Momo Number
-            </label>
+            </label> */}
 
             <input
               className={clsx({
@@ -148,7 +146,7 @@ function Page() {
               id=""
               type="string"
               {...register("momoNumber")}
-              placeholder="0000000000"
+              placeholder="Enter your momo number"
             />
 
             {formState?.errors?.momoNumber?.message && (
@@ -157,8 +155,6 @@ function Page() {
               </small>
             )}
           </div>
-
-
 
           <div className="mb-5">
             <Select
@@ -182,11 +178,8 @@ function Page() {
             )}
           </div>
 
-
-         
           <div className="flex flex-wrap -mx-3 mb-2">
             <div className="w-full px-3 ">
-
               <input
                 className={clsx({
                   "appearance-none block font-md text-md w-full bg-gray-200 text-gray-700 border border-gray-200 rounded p-2 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
@@ -199,7 +192,7 @@ function Page() {
                 type="text"
                 {...register("name")}
                 placeholder="Momo name"
-                value={nameLoading ? 'Loading...': momoName}
+                value={nameLoading ? "Loading..." : momoName}
                 disabled
               />
 
@@ -210,9 +203,6 @@ function Page() {
               )}
             </div>
           </div>
-
-
-          
 
           <button
             type="submit"

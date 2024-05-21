@@ -5,9 +5,7 @@ import { Amount } from '../constants'
 function Pending() {
     const paymentUrl = localStorage.getItem('3ds');
     const [loader,setLoader] = useState(true)
-    console.log(paymentUrl);
-
-    console.log(paymentUrl); //
+    //
     const redirectContainerRef = React.useRef(); //frame contaner
 
     React.useEffect(() => {
@@ -68,11 +66,11 @@ function Pending() {
                 radius="12.5"
                 wrapperClass="grid-wrapper"
             /></div>
-           {!paymentUrl && <div>
+           {!paymentUrl && <div className='text-center pb-2'>
 
-            <p className='text-xl font-semibold py-5 text-gray-700'>Payment Initiated</p>
-            <small className='text-center text-gray-400'>
-                We've initiated your payment of GH{Amount} . Kindly check your phone and approved the payment. <br /> Thank you
+            <p className='text-xl font-semibold py-3 text-gray-700'>Payment Initiated</p>
+            <small className='text-center text-gray-400 '>
+                We've initiated your payment of GH{Amount} . Kindly check your phone and approved the payment. 
             </small>
             </div>}
             <div

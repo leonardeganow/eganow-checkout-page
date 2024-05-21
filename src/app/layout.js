@@ -8,6 +8,7 @@ import logo2 from "../../public/Eganowlogo2jpg.jpg";
 import { FaLock } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { Amount } from "./constants";
+import { usePathname } from "next/navigation";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +19,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
   const [amount, setAmount] = useState();
+  const pathname = usePathname()
+
 
   useEffect(() => {
     setAmount(Amount);
@@ -52,15 +55,15 @@ export default function RootLayout({ children }) {
                   width={30}
                   alt="logo 2"
                 />
-                <div className="text-sm sm:text-base text-gray-600">
-                  {/* <h1>demo@eganow.com</h1> */}
+              {pathname !== '/processing' && <div className="text-sm sm:text-base text-gray-600">
+              
                   <p className="">
                     Pay{" "}
                     <span className="text-blue-500 font-medium">
                       GHS {amount}
                     </span>
                   </p>
-                </div>
+                </div>}
               </div>
               {children}
             </div>

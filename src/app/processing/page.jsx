@@ -28,6 +28,8 @@ function Page() {
     }
   };
 
+  console.log(transactionStatus);
+
   useEffect(() => {
     statusRef.current = transactionStatus;
   }, [transactionStatus]);
