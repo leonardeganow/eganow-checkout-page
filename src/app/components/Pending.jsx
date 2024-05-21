@@ -32,7 +32,7 @@ function Pending() {
         const divEl = redirectContainerRef.current.querySelector(
           "#threedsChallengeRedirect"
         );
-        console.log(divEl);
+        // console.log(divEl);
         if (divEl) {
           divEl.style.height = "100%";
         }

@@ -31,6 +31,7 @@ export default function LeftNav() {
         <Link href={item.href} key={item.id} className="hover:bg-emerald-900" >
           {/* <hr className=" border-gray-300"/> */}
 
+          <hr className=" border-gray-300 border-opacity-50"/>
           <li className={clsx({
             "font-medium  p-2 my-4  rounded  ": true,
            "bg-white text-gray-600 ": pathname === item.href,
@@ -48,7 +49,6 @@ export default function LeftNav() {
             {/* {pathname === item.href &&  <GoDotFill size={15} className="hidden sm:block" />} */}
             </div>
           </li>
-          <hr className=" border-gray-300"/>
         </Link>
       );
     });
