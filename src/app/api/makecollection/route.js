@@ -1,13 +1,16 @@
 import axios from "axios";
 import { BASE_URL, MERCHANT_AUTH } from "../../constants";
 import { NextResponse } from "next/server";
+import { response } from "../credentials/route";
 
 /**
  * GET ACCESS TOKEN
  * @returns
  */
 export const dynamic = "force-dynamic"; // defaults to auto
+
 export async function POST(request) {
+  console.log(response);
   const data = await request.json();
   // console.log(data);
   try {

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL, MERCHANT_AUTH } from "../../constants";
+import { BASE_URL, MERCHANT_AUTH, URL } from "../../constants";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -11,42 +11,42 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic"; // defaults to auto
 export async function POST(request) {
-  const res = await request.json();
-  console.log(res);
+  const { username, password, x_auth, amount, callback_url } =
+    await request.json();
   try {
-    const xAuth = res.auth;
-    console.log(xAuth);
     const data = await axios.get(`${BASE_URL}/accesstoken`, {
       headers: {
-        Authorization: "Basic " + btoa(res.username + ":" + res.password),
+        Authorization: "Basic " + btoa(username + ":" + password),
         "Content-Type": "application/json", // Adjust content type as needed
       },
     });
 
-    cookies().set("token", data.data.Token);
-    cookies().set("xauth", xAuth);
-    cookies().set({
-      name: 'name',
-      value: 'lee',
-      httpOnly: true,
-      path: '/',
-    })
+    const values = {
+      token: data.data.Token,
+      x_auth,
+      amount,
+      callback_url,
+    };
+
     if (data.data.Token) {
-      redirect("/");
-      // return NextResponse.json({ data: data.data }, { status: 200 });
+      const response = await axios.post(URL, values, {
+        headers: {
+          Authorization:
+            "Basic " +
+            btoa(
+              process.env.EGAPAY_CHECKOUT_USERNAME +
+                ":" +
+                process.env.EGAPAY_CHECKOUT_PASSWORD
+            ),
+          "Content-Type": "application/json",
+        },
+      });
+      return NextResponse.json(response.data, { status: 200 });
     }
   } catch (error) {
-    throw error;
-  }
-}
-
-export async function GET(request) {
-  try {
-    const cookieStore = cookies();
-    const response = cookieStore.getAll();
-
-   return NextResponse.json({ data: response }, { status: 200 })
-  } catch (error) {
-    throw error;
+    return NextResponse.json(
+      { error: "Failed to fetch access token" },
+      { status: 500 }
+    );
   }
 }
