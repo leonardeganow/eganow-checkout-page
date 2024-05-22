@@ -12,7 +12,9 @@ import { NextResponse } from "next/server";
  * @returns
  */
 export const dynamic = "force-dynamic"; // defaults to auto
-export async function GET() {
+export async function POST(request) {
+//   const data = await request.json();
+// console.log(data);
   try {
     const data = await axios.get(`${BASE_URL}/accesstoken`, {
       headers: {

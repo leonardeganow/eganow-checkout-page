@@ -13,7 +13,9 @@ import { Rings } from "react-loader-spinner";
 import { Amount } from "./constants";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-// import { setCookie } from "cookies-next";
+import CryptoJS from 'crypto-js';
+import getCookiesHandler from "./actions";
+
 
 export default function Home() {
   const [token, setToken] = useState(false);
@@ -56,9 +58,9 @@ export default function Home() {
 
   const getAccessTokenHandler = async () => {
     try {
-      const response = await fetch("/api/token");
+      const response = await fetch("/api/token", {method: "POST"});
       const data = await response.json();
-      // console.log(data.data.Token);
+      console.log(data.data.Token);
       setToken(data.data.Token);
       localStorage.setItem("token", data.data.Token);
     } catch (error) {
@@ -86,11 +88,25 @@ export default function Home() {
     }
   };
 
+  const getCredentialsHandler = async () => {
+    try {
+      const response = await axios.get('/api/credentials')
+      console.log(response)
+    } catch (error) {
+      console.error(error)
+    }
+
+  }
+
   useEffect(() => {
     setValue("amount", Amount);
+    getCookiesHandler()
+    getCredentialsHandler()
     getAccessTokenHandler();
     getPaymethods();
   }, []);
+
+
 
   useEffect(() => {
     getPaymethods();
