@@ -22,10 +22,12 @@ const options = [
   {
     value: "MTNMOMGH0233SC1001000101",
     label: "MTN",
+    logo:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIeJObgZJEQq_qkcJ_v6l0Vy5lOtVkmY6vWw&usqp=CAU"
   },
   {
     value: "VODCASGH0233SC10010001",
     label: "TELECEL",
+    logo:"https://www.telecel.com.gh/img/Telecel-Icon-Red.png"
   },
 ];
 
@@ -52,7 +54,7 @@ function Page() {
 
   // HANDLE SELECT OPTION
   const handleSelectChange = (selectedOption) => {
-    setValue("provider", selectedOption[0]?.value);
+    setValue("provider", selectedOption[0].value);
   };
 
   const number = watch("momoNumber");
@@ -81,7 +83,7 @@ function Page() {
 
   useEffect(() => {
     localStorage.removeItem("3ds");
-    if (number && network) {
+    if (number.length == 10 && network) {
       setNameLoading(true);
       accountHolder();
     }
@@ -175,6 +177,23 @@ function Page() {
                 borderRadius: "3px",
                 padding: "5px",
               }}
+
+              itemRenderer={({ item, methods }) => (
+                <div
+                  key={item.value}
+                  className="flex items-center p-2 cursor-pointer"
+                  onClick={() => methods.addItem(item)}
+                >
+                  {/* Render the logo */}
+                  <img
+                    src={item.logo}
+                    alt={item.label}
+                    className="w-10 h-6 mr-2 bg-gray-100 object-contain rounded-md"
+                  />
+                  {/* Render the label */}
+                  <span>{item.label}</span>
+                </div>
+              )}
             />
 
             {!watch("provider") && formState?.errors?.provider?.message && (
