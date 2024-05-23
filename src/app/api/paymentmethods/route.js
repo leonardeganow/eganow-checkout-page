@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL, MERCHANT_AUTH } from "../../constants";
+import { BASE_URL } from "../../constants";
 import { NextResponse } from "next/server";
 
 
@@ -9,7 +9,7 @@ import { NextResponse } from "next/server";
  */
 export const dynamic = "force-dynamic"; // defaults to auto
 export async function POST(request) {
-    const {token} = await request.json()
+    const {token,xAuth} = await request.json()
     try {
     const response = await axios.post(
       `${BASE_URL}/enquiry/collectionservices`,
@@ -21,7 +21,7 @@ export async function POST(request) {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
-          "X-Auth": MERCHANT_AUTH,
+          "X-Auth": xAuth,
         },
       }
     );

@@ -9,6 +9,7 @@ import { GoDotFill } from "react-icons/go";
 
 export default function LeftNav() {
   const pathname = usePathname()
+  // console.log(pathname);
 
   const items = [
     {
@@ -23,6 +24,7 @@ export default function LeftNav() {
       icon: <MdOutlineMobileScreenShare />,
       href: "/momo",
     },
+ 
   ];
 
   const renderItems = () => {
@@ -34,7 +36,7 @@ export default function LeftNav() {
           <hr className=" border-gray-300 border-opacity-50"/>
           <li className={clsx({
             "font-medium  p-2 my-4  rounded  ": true,
-           "bg-white text-gray-600 ": pathname === item.href,
+           "bg-white text-gray-600 ": pathname === item.href ,
            
           })}
           style={{

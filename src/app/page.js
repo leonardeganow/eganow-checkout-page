@@ -10,12 +10,8 @@ import "react-credit-cards-2/dist/lib/styles.scss";
 import { customAlphabet } from "nanoid";
 import { useEffect, useState } from "react";
 import { Rings } from "react-loader-spinner";
-import { Amount } from "./constants";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import CryptoJS from 'crypto-js';
-import getCookiesHandler from "./actions";
-
 
 
 

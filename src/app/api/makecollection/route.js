@@ -10,7 +10,7 @@ import { response } from "../credentials/route";
 export const dynamic = "force-dynamic"; // defaults to auto
 
 export async function POST(request) {
-  console.log(response);
+
   const data = await request.json();
   // console.log(data);
   try {
@@ -18,10 +18,10 @@ export async function POST(request) {
       `${BASE_URL}/transfer/debitaccount`,
       {
         PayPartnerServiceId: data?.serviceId,
-        Amount: "2",
+        Amount: data?.amount,
         AccountNoOrCardNoOrMSISDN: data.accountNoOrCardNoOrMSISDN,
-        AccountName: data?.accountName,
-        AccountName: data.name,
+        AccountName: data?.accountName || data.name,
+        // AccountName: data.name,
         TransactionId: data?.transactionId,
         Narration: data?.narration,
         TransCurrencyIso: "GHS",
@@ -34,12 +34,12 @@ export async function POST(request) {
         headers: {
           Authorization: `Bearer ${data?.token}`,
           "Content-Type": "application/json",
-          "X-Auth": MERCHANT_AUTH,
+          "X-Auth": data.xAuth,
         },
       }
     );
 
-    console.log(response.data);
+    // console.log(response.data);
     return NextResponse.json({ data: response.data }, { status: 200 });
   } catch (error) {
     console.error("Error:", error);

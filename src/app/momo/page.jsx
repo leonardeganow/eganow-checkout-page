@@ -13,7 +13,6 @@ import { MdMobileScreenShare } from "react-icons/md";
 
 import { customAlphabet } from "nanoid";
 // import { getAccHolderInfo, makeCollection } from "../api/token/route";
-import { Amount } from "../constants";
 import { useRouter } from "next/navigation";
 import { Rings } from "react-loader-spinner";
 import axios from "axios";
@@ -58,17 +57,17 @@ function Page() {
   const number = watch("momoNumber");
   const network = watch("provider");
 
-  
-
   const accountHolder = async () => {
     const data = {
       serviceId: network,
       accountNoOrCardNoOrMSISDN: number,
       token: localStorage.getItem("token"),
+      xAuth: localStorage.getItem("xauth"),
     };
     try {
       const response = await axios.post("/api/getKyc", data);
-      setMomoName(response?.data?.data.AccountName);
+      // console.log(response.data);
+      setMomoName(response?.data?.data?.AccountName);
       setNameLoading(false);
     } catch (error) {
       console.error(error);
@@ -78,22 +77,24 @@ function Page() {
   useEffect(() => {
     localStorage.removeItem("3ds");
     if (number && network) {
-   setNameLoading(true);
+      setNameLoading(true);
     }
     accountHolder();
   }, [number, network]);
 
   // HANDLE FORM SUBMISSION
   const onSubmit = async (values) => {
+    // console.log(values);
     const transactionId = nanoid(); //GENERATE TRANSACTION ID
     const data = {
       serviceId: values.provider,
       accountNoOrCardNoOrMSISDN: values.momoNumber,
       transactionId: transactionId,
       narration: "Payment of goods and services",
-      amount: Amount,
+      amount: localStorage.getItem("amount"),
       name: momoName,
       token: localStorage.getItem("token"),
+      xAuth: localStorage.getItem("xauth"),
     };
     try {
       const response = await axios.post("/api/makecollection/", data);

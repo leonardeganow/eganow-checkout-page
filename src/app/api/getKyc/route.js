@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL, MERCHANT_AUTH } from "../../constants";
+import { BASE_URL } from "../../constants";
 import { NextResponse } from "next/server";
 
 /**
@@ -23,12 +23,12 @@ export async function POST(request) {
         headers: {
           Authorization: `Bearer ${data?.token}`,
           "Content-Type": "application/json",
-          "X-Auth": MERCHANT_AUTH,
+          "X-Auth": data?.xAuth,
         },
       }
     );
 
-    console.log(response.data);
+    // console.log(response.data);
     return NextResponse.json({ data: response.data }, { status: 200 });
   } catch (error) {
     console.error("Error:", error);

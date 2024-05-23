@@ -26,7 +26,7 @@ function Success() {
             <p className='text-xl font-semibold py-2 text-green-500'>Payment Successful !</p>
             <small className='text-center text-gray-400 p-3 mb-4'>Thank you for your purchase. Your order has been placed successfully and is being processed.</small>
            <div className='mb-3'>
-            <Link href={'#'} className='bg-blue-500 my-4 md:px-4 md:py-2 p-2 text-sm md:text-base text-white shadow rounded '>Return to Merchant</Link>
+            <Link href={localStorage.getItem("callBack_url")} className='bg-blue-500 my-4 md:px-4 md:py-2 p-2 text-sm md:text-base text-white shadow rounded '>Return to Merchant</Link>
            </div>
         </div>
     )
