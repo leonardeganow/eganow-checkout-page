@@ -16,6 +16,7 @@ import { customAlphabet } from "nanoid";
 import { useRouter } from "next/navigation";
 import { Rings } from "react-loader-spinner";
 import axios from "axios";
+import { toast } from "sonner";
 
 const options = [
   {
@@ -66,7 +67,11 @@ function Page() {
     };
     try {
       const response = await axios.post("/api/getKyc", data);
-      // console.log(response.data);
+      if(!response.data.data.Status){
+        toast.warning(response.data.data.Message)
+        setNameLoading(false);
+      }
+      console.log(response.data.data);
       setMomoName(response?.data?.data?.AccountName);
       setNameLoading(false);
     } catch (error) {
@@ -78,8 +83,8 @@ function Page() {
     localStorage.removeItem("3ds");
     if (number && network) {
       setNameLoading(true);
+      accountHolder();
     }
-    accountHolder();
   }, [number, network]);
 
   // HANDLE FORM SUBMISSION
@@ -207,7 +212,8 @@ function Page() {
 
           <button
             type="submit"
-            disabled={formState.isSubmitting}
+            // disabled={formState.isSubmitting}
+            disabled={momoName? false:true}
             className="bg-[#1f8fff] w-full flex justify-center items-center  text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
           >
             {formState.isSubmitting ? (

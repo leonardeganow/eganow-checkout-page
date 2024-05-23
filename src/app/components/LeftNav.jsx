@@ -9,6 +9,7 @@ import { GoDotFill } from "react-icons/go";
 
 export default function LeftNav() {
   const pathname = usePathname()
+  const session = sessionStorage.getItem('p_key')
   // console.log(pathname);
 
   const items = [
@@ -16,7 +17,7 @@ export default function LeftNav() {
       id: 1,
       title: "Card",
       icon: <IoCard />,
-      href: "/",
+      href:`/${session}`,
     },
     {
       id: 2,

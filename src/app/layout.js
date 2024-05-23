@@ -9,6 +9,7 @@ import { FaLock } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { Amount } from "./constants";
 import { usePathname } from "next/navigation";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({ children }) {
   }, [amount]);
   return (
     <html lang="en">
+      <Toaster richColors position="top-center"/>
       {/* <p className="text-red-500">hello</p>
       <body className={inter.className}>{children}</body> */}
       <body className="grid place-items-center h-screen bg-[#304767] login-bg ">

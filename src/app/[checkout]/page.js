@@ -13,10 +13,10 @@ import { Rings } from "react-loader-spinner";
 import { Amount, URL } from "../constants";
 import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
+import { toast } from "sonner";
 
 export default function Home({ params }) {
   const [token, setToken] = useState(false);
-  const pathname = usePathname();
 
   //NOTE - useform
   const { register, handleSubmit, reset, watch, formState, setValue } = useForm(
@@ -44,7 +44,10 @@ export default function Home({ params }) {
         localStorage.setItem("callBack_url", getData.data.callback_url);
       }
     } catch (error) {
-      console.error(error);
+      console.log(error.response.status);
+      if(error.response.status == 500){
+          toast.error('Token is expired')
+      }
     }
   };
 
@@ -69,9 +72,13 @@ export default function Home({ params }) {
         router.push("/processing");
         localStorage.setItem("3ds", response.data.data.Extra);
       }
-      // console.log(response.data.data);
+      if(!response.data.data.Status){
+        toast.error(response.data.data.Message)
+      }
+
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      toast.error('Error')
     }
   };
 
