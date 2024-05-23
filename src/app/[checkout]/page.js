@@ -34,22 +34,12 @@ export default function Home({params}) {
 
 
   const getTokenData = async()=>{
-    console.log(p_key);
+  
     try{
-      const getData = await axios.get(`${URL}/retrieve/${p_key}`,{
-        headers: {
-          Authorization:
-            "Basic " +
-            btoa(
-              process.env.EGAPAY_CHECKOUT_USERNAME +
-                ":" +
-                process.env.EGAPAY_CHECKOUT_PASSWORD
-            ),
-          "Content-Type": "application/json",
-        },
-      })
-      
-      console.log(getData)
+      const getData = await axios.get(`api/credentials/${p_key}`)
+      if(getData.data.token){
+        localStorage.setItem('userData',JSON.stringify(getData.data))
+      }
     }catch(error){
       console.error(error)
     }
