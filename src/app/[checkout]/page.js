@@ -38,7 +38,10 @@ export default function Home({params}) {
     try{
       const getData = await axios.get(`api/credentials/${p_key}`)
       if(getData.data.token){
-        localStorage.setItem('userData',JSON.stringify(getData.data))
+        localStorage.setItem('token',getData.data.token)
+        localStorage.setItem('amount',getData.data.amount)
+        localStorage.setItem('xauth',getData.data.x_auth)
+        localStorage.setItem('callBack_url',getData.data.callback_url)
       }
     }catch(error){
       console.error(error)

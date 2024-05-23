@@ -18,12 +18,12 @@ const inter = Inter({ subsets: ["latin"] });
 // };
 
 export default function RootLayout({ children }) {
-  const [amount, setAmount] = useState();
+  const [amount, setAmount] = useState(0);
   const pathname = usePathname()
 
 
   useEffect(() => {
-    setAmount(Amount);
+    setAmount(localStorage.getItem('amount'));
   }, [amount]);
   return (
     <html lang="en">
