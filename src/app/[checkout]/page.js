@@ -14,6 +14,7 @@ import { Amount, URL } from "../constants";
 import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
+import SkeletonLoader from "./SkeletonLoader";
 
 export default function Home({ params }) {
   const [token, setToken] = useState(false);
@@ -117,17 +118,18 @@ export default function Home({ params }) {
   return (
     <div>
       {loader ? (
-        <div className="w-24 h-24 mx-auto text-center flex justify-center items-center">
-          <Grid
-            visible={true}
-            height="40"
-            width="40"
-            color="lightgray"
-            ariaLabel="grid-loading"
-            radius="12.5"
-            wrapperClass="grid-wrapper"
-          />
-        </div>
+        // <div className="w-24 h-24 mx-auto text-center flex justify-center items-center">
+        //   <Grid
+        //     visible={true}
+        //     height="40"
+        //     width="40"
+        //     color="lightgray"
+        //     ariaLabel="grid-loading"
+        //     radius="12.5"
+        //     wrapperClass="grid-wrapper"
+        //   />
+        // </div>
+        <SkeletonLoader />
       ) : (
         <form
           onSubmit={handleSubmit(onSubmit)}
