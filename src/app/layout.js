@@ -8,9 +8,10 @@ import logo2 from "../../public/Eganowlogo2jpg.jpg";
 import { FaLock } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { Amount } from "./constants";
-import { usePathname, useRouter,useParams } from "next/navigation";
+import { usePathname, useRouter, useParams } from "next/navigation";
 import { Toaster } from "sonner";
 import axios from "axios";
+import { ColorRing } from "react-loader-spinner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,24 +22,25 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
   const [amount, setAmount] = useState("");
-  const pathname = usePathname()
-
-
+  const [loader, setLoader] = useState(false);
+  const pathname = usePathname();
 
   const params = useParams();
-  // console.log(params);
+  console.log(params);
   const p_key = params.checkout;
   // console.log(params);
   // save key to session storage
   // sessionStorage.setItem("p_key", p_key);
 
   const getTokenData = async () => {
+    setLoader(true);
     try {
       const getData = await axios.get(`api/credentials/${p_key}`);
       // console.log(p_key);
       // console.log(getData.data);
+      setLoader(false);
       if (getData.data.token) {
-        setAmount(getData.data.amount)
+        setAmount(getData.data.amount);
         // setToken(getData.data.token);
         // localStorage.setItem("token", getData.data.token);
         // localStorage.setItem("amount", getData.data.amount);
@@ -47,18 +49,19 @@ export default function RootLayout({ children }) {
       }
     } catch (error) {
       console.log(error);
+      setLoader(false);
       // if(error.response.status == 500){
       //     toast.error('Token is expired')
       // }
     }
   };
 
-    useEffect(() => {
-   getTokenData()
-  }, []);
+  useEffect(() => {
+    getTokenData();
+  }, [params.checkout]);
   return (
     <html lang="en">
-      <Toaster richColors position="top-center"/>
+      <Toaster richColors position="top-center" />
       {/* <p className="text-red-500">hello</p>
       <body className={inter.className}>{children}</body> */}
       <body className="grid place-items-center h-screen bg-[#304767] login-bg ">
@@ -87,15 +90,34 @@ export default function RootLayout({ children }) {
                   width={30}
                   alt="logo 2"
                 />
-              {pathname !== '/processing' && <div className="text-sm sm:text-base text-gray-600">
-              
-                  <p className="">
-                    Pay{" "}
-                    <span className="text-blue-500 font-medium">
-                      GHS {amount}
-                    </span>
-                  </p>
-                </div>}
+                {pathname !== "/processing" && (
+                  <div className="text-sm sm:text-base text-gray-600">
+                    {loader ? (
+                      <ColorRing
+                        visible={true}
+                        height="40"
+                        width="40"
+                        ariaLabel="color-ring-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="color-ring-wrapper"
+                        colors={[
+                          "#e15b64",
+                          "#f47e60",
+                          "#f8b26a",
+                          "#abbd81",
+                          "#849b87",
+                        ]}
+                      />
+                    ) : (
+                      <p className="">
+                        Pay{" "}
+                        <span className="text-blue-500 font-medium">
+                          GHS {amount}
+                        </span>
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
               {children}
             </div>
