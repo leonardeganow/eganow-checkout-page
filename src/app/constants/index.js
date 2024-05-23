@@ -12,6 +12,6 @@ export const MERCHANT_AUTH =
   "GH0233eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImRvY2FtZW55b0BnbWFpbC5jb20iLCJjZXJ0c2VyaWFsbnVtYmVyIjoiMDIzMzIwMjIyOTIwMDAwMDAwMDEiLCJwcmltYXJ5c2lkIjoiRkxVVFdBR0gwMjMzU0MyMDEwMDAwMSIsIm5iZiI6MTY2NjI2MzgwOCwiZXhwIjoxNjY2MjY0MTA4LCJpYXQiOjE2NjYyNjM4MDh9.iQKFVfUvG3xJPuCoTTx25r43fgCd34";
 
 export const BASE_URL = "https://eganow-merchant.egadevapi.com/eganow/api";
-export const URL = "https://merchant-checkout.egadevapi.com/store";
+export const URL = "https://merchant-checkout.egadevapi.com";
 // export const BASE_URL= "https://wwh0vng7-5001.inc1.devtunnels.ms/eganow/api"
 export const Amount = 2;

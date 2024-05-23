@@ -10,7 +10,7 @@ import "react-credit-cards-2/dist/lib/styles.scss";
 import { customAlphabet } from "nanoid";
 import { useEffect, useState } from "react";
 import { Rings } from "react-loader-spinner";
-import { Amount } from "../constants";
+import { Amount, URL } from "../constants";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import CryptoJS from 'crypto-js';
@@ -28,10 +28,32 @@ export default function Home({params}) {
     }
   );
   const router = useRouter();
-  console.log(params.checkout);
-
+  const p_key = params.checkout;
 
   const nanoid = customAlphabet("0123456789", 12);
+
+
+  const getTokenData = async()=>{
+    console.log(p_key);
+    try{
+      const getData = await axios.get(`${URL}/retrieve/${p_key}`,{
+        headers: {
+          Authorization:
+            "Basic " +
+            btoa(
+              process.env.EGAPAY_CHECKOUT_USERNAME +
+                ":" +
+                process.env.EGAPAY_CHECKOUT_PASSWORD
+            ),
+          "Content-Type": "application/json",
+        },
+      })
+      
+      console.log(getData)
+    }catch(error){
+      console.error(error)
+    }
+  }
 
   const onSubmit = async (values) => {
     const transactionId = nanoid(); //GENERATE TRANSACTION ID
@@ -58,17 +80,17 @@ export default function Home({params}) {
     }
   };
 
-  const getAccessTokenHandler = async () => {
-    try {
-      const response = await fetch("/api/token", {method: "POST"});
-      const data = await response.json();
-      console.log(data.data.Token);
-      setToken(data.data.Token);
-      localStorage.setItem("token", data.data.Token);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const getAccessTokenHandler = async () => {
+  //   try {
+  //     const response = await fetch("/api/token", {method: "POST"});
+  //     const data = await response.json();
+  //     // console.log(data.data.Token);
+  //     setToken(data.data.Token);
+  //     localStorage.setItem("token", data.data.Token);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const getPaymethods = async () => {
     const body = {
@@ -90,22 +112,23 @@ export default function Home({params}) {
     }
   };
 
-  const getCredentialsHandler = async () => {
-    try {
-      const response = await axios.get('/api/credentials')
-      console.log(response)
-    } catch (error) {
-      console.error(error)
-    }
+  // const getCredentialsHandler = async () => {
+  //   try {
+  //     const response = await axios.get('/api/credentials')
+  //     console.log(response)
+  //   } catch (error) {
+  //     console.error(error)
+  //   }
 
-  }
+  // }
 
   useEffect(() => {
     setValue("amount", Amount);
     getCookiesHandler()
-    getCredentialsHandler()
-    getAccessTokenHandler();
+    // getCredentialsHandler()
+    // getAccessTokenHandler();
     getPaymethods();
+    getTokenData()
   }, []);
 
 

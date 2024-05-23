@@ -29,7 +29,7 @@ export async function POST(request) {
     };
 
     if (data.data.Token) {
-      const response = await axios.post(URL, values, {
+      const response = await axios.post(`${URL}/store`, values, {
         headers: {
           Authorization:
             "Basic " +
@@ -50,3 +50,4 @@ export async function POST(request) {
     );
   }
 }
+
