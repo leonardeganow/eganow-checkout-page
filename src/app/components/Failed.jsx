@@ -13,7 +13,7 @@ function Failed() {
             <p className='text-xl font-semibold py-2 text-red-700'>Payment Failed !</p>
             <small className='text-center text-gray-400 mb-5'>Unfortunately, your payment could not be processed. Please try again or use a different payment method.</small>
            <div>
-            <Link href={'/momo'} className='bg-blue-500 my-6 px-4 py-2 text-white shadow'>Retry</Link>
+            <Link href={'/'} className='bg-blue-500 my-6 px-4 py-2 text-white shadow'>Retry</Link>
            </div>
         </div>
     )
