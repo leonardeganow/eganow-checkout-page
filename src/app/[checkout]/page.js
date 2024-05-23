@@ -105,10 +105,10 @@ export default function Home({ params }) {
   };
 
   useEffect(() => {
-    getTokenData();
   }, []);
-
+  
   useEffect(() => {
+    getTokenData();
     getPaymethods();
   }, [token]);
 

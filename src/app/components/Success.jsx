@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import success from '../../../public/sucess.gif'
 import animation from '../../../public/Animation.json'
 import Lottie from 'react-lottie';
@@ -15,6 +15,13 @@ function Success() {
         }
       };
 
+
+      useEffect(()=>{
+        localStorage.removeItem("amount");
+        localStorage.removeItem("token");
+        localStorage.removeItem("xauth");
+        localStorage.removeItem("transactionId");
+      },[])
      
       
 

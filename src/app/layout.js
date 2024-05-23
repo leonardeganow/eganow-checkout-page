@@ -8,8 +8,9 @@ import logo2 from "../../public/Eganowlogo2jpg.jpg";
 import { FaLock } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { Amount } from "./constants";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter,useParams } from "next/navigation";
 import { Toaster } from "sonner";
+import axios from "axios";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,13 +20,42 @@ const inter = Inter({ subsets: ["latin"] });
 // };
 
 export default function RootLayout({ children }) {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState("");
   const pathname = usePathname()
 
 
-  useEffect(() => {
-    setAmount(localStorage.getItem('amount'));
-  }, [amount]);
+
+  const params = useParams();
+  // console.log(params);
+  const p_key = params.checkout;
+  // console.log(params);
+  // save key to session storage
+  // sessionStorage.setItem("p_key", p_key);
+
+  const getTokenData = async () => {
+    try {
+      const getData = await axios.get(`api/credentials/${p_key}`);
+      // console.log(p_key);
+      // console.log(getData.data);
+      if (getData.data.token) {
+        setAmount(getData.data.amount)
+        // setToken(getData.data.token);
+        // localStorage.setItem("token", getData.data.token);
+        // localStorage.setItem("amount", getData.data.amount);
+        // localStorage.setItem("xauth", getData.data.x_auth);
+        // localStorage.setItem("callBack_url", getData.data.callback_url);
+      }
+    } catch (error) {
+      console.log(error);
+      // if(error.response.status == 500){
+      //     toast.error('Token is expired')
+      // }
+    }
+  };
+
+    useEffect(() => {
+   getTokenData()
+  }, []);
   return (
     <html lang="en">
       <Toaster richColors position="top-center"/>
