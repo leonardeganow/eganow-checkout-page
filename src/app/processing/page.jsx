@@ -1,46 +1,27 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 
-// import { getTransactionStatus } from "../api/token/route";
 import Pending from "../components/Pending";
 import Success from "../components/Success";
 import Failed from "../components/Failed";
 import axios from "axios";
-import dynamic from 'next/dynamic'
- 
-// const Pending = dynamic(() => import('../components/Pending'), {
-//   ssr: false,
-// })
-// const Failed = dynamic(() => import('../components/Failed'), {
-//   ssr: false,
-// })
-// const Success = dynamic(() => import('../components/Success'), {
-//   ssr: false,
-// })
+import dynamic from "next/dynamic";
 
 function Page() {
-
   const [transactionStatus, setTransactionStatus] = useState("PENDING");
   const [savedTransactionId, setSavedTransactionId] = useState("");
   const [token, setToken] = useState("");
   const statusRef = useRef(transactionStatus);
 
-
-
-  // const savedTransactionId = '';
-  // const token = '';
-  // const savedTransactionId = localStorage.getItem("transactionId");
-  // const token = localStorage.getItem("token");
-
   // FUNCTION TO CHECK TRANSACTION STATUS
   const getStats = async () => {
-
     const data = {
       token: token,
       transactionId: savedTransactionId,
+      xAuth: localStorage.getItem("xauth")
     };
 
-    console.log(data);
+    // console.log(data);
     try {
       const response = await axios.post("/api/transactionstatus/", data);
       return response.data.data.TransStatus;
@@ -54,8 +35,8 @@ function Page() {
 
   useEffect(() => {
     statusRef.current = transactionStatus;
-    setSavedTransactionId(localStorage.getItem("transactionId"))
-    setToken(localStorage.getItem("token"))
+    setSavedTransactionId(localStorage.getItem("transactionId"));
+    setToken(localStorage.getItem("token"));
   }, [transactionStatus]);
 
   useEffect(() => {
@@ -70,7 +51,7 @@ function Page() {
 
     // Clean up interval on component unmount
     return () => clearInterval(interval);
-  }, [savedTransactionId,token]);
+  }, [savedTransactionId, token]);
 
   const renderStatusComponent = () => {
     switch (transactionStatus) {

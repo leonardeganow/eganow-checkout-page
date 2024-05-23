@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Grid } from "react-loader-spinner";
-import { Amount } from "../constants";
 
 function Pending() {
   const [loader, setLoader] = useState(true);
-  const [paymentUrl, setPaymentUrl] = useState('');
+  const [paymentUrl, setPaymentUrl] = useState(localStorage.getItem("3ds"));
   // const paymentUrl = localStorage.getItem('3ds');
   // const paymentUrl = '';
   //
@@ -13,6 +12,8 @@ function Pending() {
 
     
   // },[paymentUrl])
+
+  // console.log(localStorage.getItem("3ds"));
   
   React.useEffect(() => {
     setPaymentUrl(localStorage.getItem("3ds"));
@@ -80,7 +81,7 @@ function Pending() {
             Payment Initiated
           </p>
           <small className="text-center text-gray-400 ">
-            We've initiated your payment of GH{Amount} . Kindly check your phone
+            We've initiated your payment of GH{localStorage.getItem("amount")} . Kindly check your phone
             and approved the payment.
           </small>
         </div>

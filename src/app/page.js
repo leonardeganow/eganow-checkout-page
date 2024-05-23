@@ -10,12 +10,8 @@ import "react-credit-cards-2/dist/lib/styles.scss";
 import { customAlphabet } from "nanoid";
 import { useEffect, useState } from "react";
 import { Rings } from "react-loader-spinner";
-import { Amount } from "./constants";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import CryptoJS from 'crypto-js';
-import getCookiesHandler from "./actions";
-
 
 export default function Home() {
   const [token, setToken] = useState(false);
@@ -42,7 +38,7 @@ export default function Home() {
     // console.log(data);
     try {
       const response = await axios.post("/api/makecollection/", data);
-      localStorage.setItem('transactionId',transactionId)
+      localStorage.setItem("transactionId", transactionId);
       if (
         response.data.data.Status &&
         response.data.data.TransStatus == "PENDING"
@@ -51,18 +47,6 @@ export default function Home() {
         localStorage.setItem("3ds", response.data.data.Extra);
       }
       // console.log(response.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const getAccessTokenHandler = async () => {
-    try {
-      const response = await fetch("/api/token", {method: "POST"});
-      const data = await response.json();
-      console.log(data.data.Token);
-      setToken(data.data.Token);
-      localStorage.setItem("token", data.data.Token);
     } catch (error) {
       console.log(error);
     }
@@ -88,25 +72,9 @@ export default function Home() {
     }
   };
 
-  const getCredentialsHandler = async () => {
-    try {
-      const response = await axios.get('/api/credentials')
-      console.log(response)
-    } catch (error) {
-      console.error(error)
-    }
-
-  }
-
   useEffect(() => {
-    setValue("amount", Amount);
-    getCookiesHandler()
-    getCredentialsHandler()
-    getAccessTokenHandler();
     getPaymethods();
   }, []);
-
-
 
   useEffect(() => {
     getPaymethods();

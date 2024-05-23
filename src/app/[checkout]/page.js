@@ -11,14 +11,13 @@ import { customAlphabet } from "nanoid";
 import { useEffect, useState } from "react";
 import { Rings } from "react-loader-spinner";
 import { Amount, URL } from "../constants";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
-import CryptoJS from 'crypto-js';
-import getCookiesHandler from "../actions";
 
-
-export default function Home({params}) {
+export default function Home({ params }) {
   const [token, setToken] = useState(false);
+  const pathname = usePathname();
+
   //NOTE - useform
   const { register, handleSubmit, reset, watch, formState, setValue } = useForm(
     {
@@ -32,34 +31,35 @@ export default function Home({params}) {
 
   const nanoid = customAlphabet("0123456789", 12);
 
-
-  const getTokenData = async()=>{
-  
-    try{
-      const getData = await axios.get(`api/credentials/${p_key}`)
-      if(getData.data.token){
-        localStorage.setItem('token',getData.data.token)
-        localStorage.setItem('amount',getData.data.amount)
-        localStorage.setItem('xauth',getData.data.x_auth)
-        localStorage.setItem('callBack_url',getData.data.callback_url)
+  const getTokenData = async () => {
+    try {
+      const getData = await axios.get(`api/credentials/${p_key}`);
+      if (getData.data.token) {
+        setToken(getData.data.token);
+        localStorage.setItem("token", getData.data.token);
+        localStorage.setItem("amount", getData.data.amount);
+        localStorage.setItem("xauth", getData.data.x_auth);
+        localStorage.setItem("callBack_url", getData.data.callback_url);
       }
-    }catch(error){
-      console.error(error)
+    } catch (error) {
+      console.error(error);
     }
-  }
+  };
 
   const onSubmit = async (values) => {
     const transactionId = nanoid(); //GENERATE TRANSACTION ID
     const data = {
-      narration: `${values.name} pays GHS${values.amount}`,
+      narration: `${values.name} pays GHS${localStorage.getItem("amount")}`,
       transactionId,
+      amount: localStorage.getItem("amount"),
       token: localStorage.getItem("token"),
+      xAuth: localStorage.getItem("xauth"),
       ...values,
     };
     // console.log(data);
     try {
       const response = await axios.post("/api/makecollection/", data);
-      localStorage.setItem('transactionId',transactionId)
+      localStorage.setItem("transactionId", transactionId);
       if (
         response.data.data.Status &&
         response.data.data.TransStatus == "PENDING"
@@ -73,25 +73,13 @@ export default function Home({params}) {
     }
   };
 
-  // const getAccessTokenHandler = async () => {
-  //   try {
-  //     const response = await fetch("/api/token", {method: "POST"});
-  //     const data = await response.json();
-  //     // console.log(data.data.Token);
-  //     setToken(data.data.Token);
-  //     localStorage.setItem("token", data.data.Token);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const getPaymethods = async () => {
     const body = {
       token: localStorage.getItem("token"),
+      xAuth: localStorage.getItem("xauth"),
     };
     try {
       const response = await axios.post(`/api/paymentmethods/`, body);
-      // console.log(response.data.data.Status);
       // console.log(response.data.data);
       if (response?.data?.data?.Status) {
         const serviceId =
@@ -105,26 +93,9 @@ export default function Home({params}) {
     }
   };
 
-  // const getCredentialsHandler = async () => {
-  //   try {
-  //     const response = await axios.get('/api/credentials')
-  //     console.log(response)
-  //   } catch (error) {
-  //     console.error(error)
-  //   }
-
-  // }
-
   useEffect(() => {
-    setValue("amount", Amount);
-    getCookiesHandler()
-    // getCredentialsHandler()
-    // getAccessTokenHandler();
-    getPaymethods();
-    getTokenData()
+    getTokenData();
   }, []);
-
-
 
   useEffect(() => {
     getPaymethods();
