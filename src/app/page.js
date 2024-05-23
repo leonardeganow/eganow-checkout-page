@@ -9,31 +9,39 @@ import Cards from "react-credit-cards-2";
 import "react-credit-cards-2/dist/lib/styles.scss";
 import { customAlphabet } from "nanoid";
 import { useEffect, useState } from "react";
-import { Rings } from "react-loader-spinner";
+import { Grid, Rings } from "react-loader-spinner";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-
-
 export default function Home() {
-
   const router = useRouter();
 
   useEffect(() => {
     // Retrieve the path from session storage
-    const dynamicPath = sessionStorage.getItem('p_key');
+    const dynamicPath = sessionStorage.getItem("p_key");
 
     // If a dynamic path is found, redirect to it
     if (dynamicPath) {
       router.replace(`/${dynamicPath}`);
     } else {
-      console.warn('No dynamic path found in session storage.');
+      console.warn("No dynamic path found in session storage.");
     }
   }, [router]);
 
-
-
   return (
-    <div className="text-center">Loading...</div>
+    <div className="text-center">
+      {" "}
+      <div className="w-24 h-24 mx-auto text-center flex justify-center items-center">
+        <Grid
+          visible={true}
+          height="40"
+          width="40"
+          color="lightgray"
+          ariaLabel="grid-loading"
+          radius="12.5"
+          wrapperClass="grid-wrapper"
+        />
+      </div>
+    </div>
   );
 }

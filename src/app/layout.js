@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
   const pathname = usePathname();
 
   const params = useParams();
-  console.log(params);
+  // console.log(params);
   const p_key = params.checkout;
   // console.log(params);
   // save key to session storage
