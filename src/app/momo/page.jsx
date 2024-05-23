@@ -22,7 +22,7 @@ const options = [
   {
     value: "MTNMOMGH0233SC1001000101",
     label: "MTN",
-    logo:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIeJObgZJEQq_qkcJ_v6l0Vy5lOtVkmY6vWw&usqp=CAU"
+    logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/MTN-logo.jpg/1121px-MTN-logo.jpg"
   },
   {
     value: "VODCASGH0233SC10010001",
@@ -188,10 +188,25 @@ function Page() {
                   <img
                     src={item.logo}
                     alt={item.label}
-                    className="w-10 h-6 mr-2 bg-gray-100 object-contain rounded-md"
+                    className="w-10 h-6 mr-2 object-contain"
                   />
                   {/* Render the label */}
                   <span>{item.label}</span>
+                </div>
+              )}
+
+              contentRenderer={({ props, state }) => (
+                <div className="flex items-center">
+                  {/* Render the logo of the selected item */}
+                  {state.values.length > 0 && (
+                    <img
+                      src={state.values[0].logo}
+                      alt={state.values[0].label}
+                      className="w-auto h-6 mr-2 bg-gray-100 object-contain"
+                    />
+                  )}
+                  {/* Render the label of the selected item */}
+                  <span>{state.values.length > 0 ? state.values[0].label : props.placeholder}</span>
                 </div>
               )}
             />
@@ -252,24 +267,9 @@ function Page() {
               </div>
             )}
           </button>
-
-          {/* <button
-            type="submit"
-            className="bg-[#1f8fff] w-full flex justify-center items-center gap-2 text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
-          >
-            <GiTakeMyMoney size={25} />
-            Confirm
-          </button> */}
         </div>
-        {/* <small className="text-gray-400 text-xs text-center p-5">
-          Lorem ipsum dolor sit amet consectetur adipisicingfvfgg elit. Quos id
-          perspiciatis laboriosam aut rerum fugiat!!!!
-        </small> */}
+     
       </form>
-
-      {/* <section className="flex justify-center items-center">
-        Loading...
-      </section> */}
     </div>
   );
 }
