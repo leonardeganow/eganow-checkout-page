@@ -29,6 +29,8 @@ export default function Home({params}) {
   );
   const router = useRouter();
   const p_key = params.checkout;
+  // save key to session storage
+  sessionStorage.setItem("p_key", p_key);
 
   const nanoid = customAlphabet("0123456789", 12);
 
