@@ -2,14 +2,14 @@
 import clsx from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation"
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoCard } from "react-icons/io5";
 import { MdOutlineMobileScreenShare } from "react-icons/md";
 import { GoDotFill } from "react-icons/go";
 
 export default function LeftNav() {
   const pathname = usePathname()
-  const session = sessionStorage.getItem('p_key')
+  const [session,setSession] = useState("")
   // console.log(pathname);
 
   const items = [
@@ -27,6 +27,11 @@ export default function LeftNav() {
     },
  
   ];
+
+  useEffect(() =>{
+setSession(sessionStorage.getItem('p_key')
+)
+  },[])
 
   const renderItems = () => {
     return items.map((item) => {

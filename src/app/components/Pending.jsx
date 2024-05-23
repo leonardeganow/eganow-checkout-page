@@ -3,7 +3,8 @@ import { Grid } from "react-loader-spinner";
 
 function Pending() {
   const [loader, setLoader] = useState(true);
-  const [paymentUrl, setPaymentUrl] = useState(localStorage.getItem("3ds"));
+  const [paymentUrl, setPaymentUrl] = useState("");
+  const [amount, setAmount] = useState("");
   // const paymentUrl = localStorage.getItem('3ds');
   // const paymentUrl = '';
   //
@@ -16,6 +17,7 @@ function Pending() {
   // console.log(localStorage.getItem("3ds"));
   
   React.useEffect(() => {
+    setAmount(localStorage.getItem("amount"));
     setPaymentUrl(localStorage.getItem("3ds"));
     if (redirectContainerRef.current) {
       // Set the HTML content
@@ -81,7 +83,7 @@ function Pending() {
             Payment Initiated
           </p>
           <small className="text-center text-gray-400 ">
-            We've initiated your payment of GH{localStorage.getItem("amount")} . Kindly check your phone
+            We've initiated your payment of GH{amount} . Kindly check your phone
             and approved the payment.
           </small>
         </div>

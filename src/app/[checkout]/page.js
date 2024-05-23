@@ -36,6 +36,8 @@ export default function Home({ params }) {
   const getTokenData = async () => {
     try {
       const getData = await axios.get(`api/credentials/${p_key}`);
+      console.log(p_key);
+      console.log(getData.data);
       if (getData.data.token) {
         setToken(getData.data.token);
         localStorage.setItem("token", getData.data.token);
@@ -45,9 +47,9 @@ export default function Home({ params }) {
       }
     } catch (error) {
       console.log(error.response.status);
-      if(error.response.status == 500){
-          toast.error('Token is expired')
-      }
+      // if(error.response.status == 500){
+      //     toast.error('Token is expired')
+      // }
     }
   };
 
