@@ -12,6 +12,7 @@ import { useEffect, useState } from "react";
 import { Grid, Rings } from "react-loader-spinner";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import SkeletonLoader from "./[checkout]/SkeletonLoader";
 
 export default function Home() {
   const router = useRouter();
@@ -31,8 +32,8 @@ export default function Home() {
   return (
     <div className="text-center">
       {" "}
-      <div className="w-24 h-24 mx-auto text-center flex justify-center items-center">
-        <Grid
+      <div className="  ">
+        {/* <Grid
           visible={true}
           height="40"
           width="40"
@@ -40,7 +41,9 @@ export default function Home() {
           ariaLabel="grid-loading"
           radius="12.5"
           wrapperClass="grid-wrapper"
-        />
+        /> */}
+
+        <SkeletonLoader/>
       </div>
     </div>
   );
