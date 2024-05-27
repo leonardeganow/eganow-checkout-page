@@ -22,12 +22,14 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
   const [amount, setAmount] = useState("");
+  const [pKey, setPkey] = useState("");
   const [loader, setLoader] = useState(false);
   const pathname = usePathname();
 
   const params = useParams();
   // console.log(params);
   const p_key = params.checkout;
+  // console.log(sessionStorage.getItem('p_key'))
   // console.log(params);
   // save key to session storage
   // sessionStorage.setItem("p_key", p_key);
@@ -35,7 +37,7 @@ export default function RootLayout({ children }) {
   const getTokenData = async () => {
     setLoader(true);
     try {
-      const getData = await axios.get(`api/credentials/${p_key}`);
+      const getData = await axios.get(`api/credentials/${pKey}`);
       // console.log(p_key);
       // console.log(getData.data);
       setLoader(false);
@@ -58,7 +60,8 @@ export default function RootLayout({ children }) {
 
   useEffect(() => {
     getTokenData();
-  }, [params.checkout]);
+    setPkey(sessionStorage.getItem('p_key'))
+  }, [pKey]);
   return (
     <html lang="en">
       <Toaster richColors position="top-center" />

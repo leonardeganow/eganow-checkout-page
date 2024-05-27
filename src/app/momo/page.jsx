@@ -73,7 +73,7 @@ function Page() {
         toast.warning(response.data.data.Message)
         setNameLoading(false);
       }
-      console.log(response.data.data);
+      // console.log(response.data.data);
       setMomoName(response?.data?.data?.AccountName);
       setNameLoading(false);
     } catch (error) {
