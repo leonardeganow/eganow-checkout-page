@@ -112,6 +112,9 @@ function Page() {
       ) {
         router.push("/processing");
       }
+      if (!response.data.data.Status) {
+        toast.error(response.data.data.Message);
+      }
       // console.log(response.data.data)
     } catch (error) {
       console.error(error);
