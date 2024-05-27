@@ -11,12 +11,11 @@ function Failed() {
     setUrl(encodeURI(localStorage.getItem("callBack_url")));
     setTimeout(function () {
       //code goes here
-      localStorage.removeItem("amount");
-      localStorage.removeItem("token");
-      localStorage.removeItem("xauth");
-      localStorage.removeItem("transactionId");
-
-      window.location.href = `${url}&status=failed`;
+      // localStorage.removeItem("amount");
+      // localStorage.removeItem("token");
+      // localStorage.removeItem("xauth");
+      // localStorage.removeItem("transactionId");
+      // window.location.href = `${url}&status=failed`;
     }, 3000);
   }, []);
   return (
@@ -31,6 +30,20 @@ function Failed() {
         Unfortunately, your payment could not be processed. Please try again or
         use a different payment method.
       </small>
+
+      <div className="mb-8">
+        <Link
+       
+          href='/'
+          // href={{
+          //   pathname: localStorage.getItem("callBack_url"),
+          //   query: { status: "failed" },
+          // }}
+          className="bg-yellow-500 my-4 md:px-4 md:py-2 p-2 text-sm md:text-base text-white shadow rounded "
+        >
+          Retry payment
+        </Link>{" "}
+      </div>
       <div>
         <Link
           onClick={() => {
@@ -49,6 +62,8 @@ function Failed() {
           Return to Merchant
         </Link>{" "}
       </div>
+
+      
     </div>
   );
 }

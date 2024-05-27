@@ -18,6 +18,7 @@ import SkeletonLoader from "./SkeletonLoader";
 
 export default function Home({ params }) {
   const [token, setToken] = useState(false);
+  const [url, setUrl] = useState("");
   const [loader, setLoader] = useState(false);
 
   //NOTE - useform
@@ -52,8 +53,8 @@ export default function Home({ params }) {
     } catch (error) {
       console.log(error);
       setLoader(false);
-      if(error.response.status == 500){
-          toast.error('something went wrong, please try again');
+      if (error.response.status == 500) {
+        toast.error("something went wrong, please try again");
       }
     }
   };
@@ -108,7 +109,9 @@ export default function Home({ params }) {
     }
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    setUrl(localStorage.getItem("callBack_url"));
+  }, [url]);
 
   useEffect(() => {
     getTokenData();
@@ -307,6 +310,14 @@ export default function Home({ params }) {
               </div>
             )}
           </button>
+          <p
+            onClick={() => {
+              window.location.href = url;
+            }}
+            className="text-center cursor-pointer text-xs mt-1 text-red-500 underline flex justify-center"
+          >
+            Go back
+          </p>
         </form>
       )}
     </div>

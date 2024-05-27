@@ -47,6 +47,8 @@ function Page() {
       if (status === "SUCCESSFUL" || status === "FAILED") {
         clearInterval(interval);
       }
+
+      console.log(status);
     }, 5000); // Check every 5 seconds
 
     // Clean up interval on component unmount

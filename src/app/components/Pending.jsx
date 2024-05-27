@@ -83,7 +83,7 @@ function Pending() {
             Payment Initiated
           </p>
           <small className="text-center text-gray-400 ">
-            We've initiated your payment of GH{amount} . Kindly check your phone
+            We've initiated your payment of GHS {amount} . Kindly check your phone
             and approved the payment.
           </small>
         </div>

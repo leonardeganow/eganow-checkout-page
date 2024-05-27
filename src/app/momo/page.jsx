@@ -17,17 +17,18 @@ import { useRouter } from "next/navigation";
 import { Rings } from "react-loader-spinner";
 import axios from "axios";
 import { toast } from "sonner";
+import Link from "next/link";
 
 const options = [
   {
     value: "MTNMOMGH0233SC1001000101",
     label: "MTN",
-    logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/MTN-logo.jpg/1121px-MTN-logo.jpg"
+    logo: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/MTN-logo.jpg/1121px-MTN-logo.jpg",
   },
   {
     value: "VODCASGH0233SC10010001",
     label: "TELECEL",
-    logo:"https://www.telecel.com.gh/img/Telecel-Icon-Red.png"
+    logo: "https://www.telecel.com.gh/img/Telecel-Icon-Red.png",
   },
 ];
 
@@ -50,6 +51,7 @@ function Page() {
     defaultValues: defaultFormValues,
   });
   const [momoName, setMomoName] = useState("");
+  const [url, setUrl] = useState("sd");
   const [nameLoading, setNameLoading] = useState(false);
 
   // HANDLE SELECT OPTION
@@ -69,8 +71,8 @@ function Page() {
     };
     try {
       const response = await axios.post("/api/getKyc", data);
-      if(!response.data.data.Status){
-        toast.warning(response.data.data.Message)
+      if (!response.data.data.Status) {
+        toast.warning(response.data.data.Message);
         setNameLoading(false);
       }
       // console.log(response.data.data);
@@ -83,11 +85,13 @@ function Page() {
 
   useEffect(() => {
     localStorage.removeItem("3ds");
+    setUrl(localStorage.getItem("callBack_url"));
+
     if (number.length == 10 && network) {
       setNameLoading(true);
       accountHolder();
     }
-  }, [number, network]);
+  }, [number, network, url]);
 
   // HANDLE FORM SUBMISSION
   const onSubmit = async (values) => {
@@ -180,7 +184,6 @@ function Page() {
                 borderRadius: "3px",
                 padding: "5px",
               }}
-
               itemRenderer={({ item, methods }) => (
                 <div
                   key={item.value}
@@ -197,7 +200,6 @@ function Page() {
                   <span>{item.label}</span>
                 </div>
               )}
-
               contentRenderer={({ props, state }) => (
                 <div className="flex items-center">
                   {/* Render the logo of the selected item */}
@@ -209,7 +211,11 @@ function Page() {
                     />
                   )}
                   {/* Render the label of the selected item */}
-                  <span>{state.values.length > 0 ? state.values[0].label : props.placeholder}</span>
+                  <span>
+                    {state.values.length > 0
+                      ? state.values[0].label
+                      : props.placeholder}
+                  </span>
                 </div>
               )}
             />
@@ -250,7 +256,7 @@ function Page() {
           <button
             type="submit"
             // disabled={formState.isSubmitting}
-            disabled={momoName? false:true}
+            disabled={momoName ? false : true}
             className="bg-[#1f8fff] w-full flex justify-center items-center  text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
           >
             {formState.isSubmitting ? (
@@ -270,8 +276,15 @@ function Page() {
               </div>
             )}
           </button>
+          <p
+            onClick={() => {
+              window.location.href = url;
+            }}
+            className="text-center cursor-pointer text-xs mt-1 text-red-500 underline flex justify-center"
+          >
+            Go back
+          </p>
         </div>
-     
       </form>
     </div>
   );
