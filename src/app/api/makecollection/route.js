@@ -24,7 +24,7 @@ export async function POST(request) {
         // AccountName: data.name,
         TransactionId: data?.transactionId,
         Narration: data?.narration,
-        TransCurrencyIso: "USD",
+        TransCurrencyIso: data?.currency,
         ExpiryDateMonth: data?.expiryMonth || 0,
         ExpiryDateYear: data?.expiryYear || 0,
         Cvv: data?.cvv || 0,

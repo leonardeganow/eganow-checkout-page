@@ -11,7 +11,7 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic"; // defaults to auto
 export async function POST(request) {
-  const { username, password, x_auth, amount, callback_url } =
+  const { username, password, x_auth, amount, callback_url, currency } =
     await request.json();
   try {
     const data = await axios.get(`${BASE_URL}/accesstoken`, {
@@ -26,6 +26,7 @@ export async function POST(request) {
       x_auth,
       amount,
       callback_url,
+      currency
     };
 
     if (data.data.Token) {

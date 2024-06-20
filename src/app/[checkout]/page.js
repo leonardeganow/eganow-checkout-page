@@ -41,7 +41,7 @@ export default function Home({ params }) {
     try {
       const getData = await axios.get(`api/credentials/${p_key}`);
       // console.log(p_key);
-      // console.log(getData.data);
+      console.log(getData.data);
       if (getData.data.token) {
         setLoader(false);
         setToken(getData.data.token);
@@ -49,6 +49,7 @@ export default function Home({ params }) {
         localStorage.setItem("amount", getData.data.amount);
         localStorage.setItem("xauth", getData.data.x_auth);
         localStorage.setItem("callBack_url", getData.data.callback_url);
+        localStorage.setItem("currency", getData.data.currency);
       }
     } catch (error) {
       console.log(error);
@@ -67,6 +68,7 @@ export default function Home({ params }) {
       amount: localStorage.getItem("amount"),
       token: localStorage.getItem("token"),
       xAuth: localStorage.getItem("xauth"),
+      currency: localStorage.getItem("currency"),
       ...values,
     };
     // console.log(data);

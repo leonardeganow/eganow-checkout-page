@@ -22,6 +22,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
   const [amount, setAmount] = useState("");
+  const [currency,setCurrency] = useState('USD')
   const [pKey, setPkey] = useState("");
   const [loader, setLoader] = useState(false);
   const pathname = usePathname();
@@ -43,6 +44,7 @@ export default function RootLayout({ children }) {
       setLoader(false);
       if (getData.data.token) {
         setAmount(getData.data.amount);
+        setCurrency(getData.data.currency)
         // setToken(getData.data.token);
         // localStorage.setItem("token", getData.data.token);
         // localStorage.setItem("amount", getData.data.amount);
@@ -115,7 +117,7 @@ export default function RootLayout({ children }) {
                       <p className="">
                         Pay{" "}
                         <span className="text-blue-500 font-medium">
-                          USD {amount}
+                         {currency} {amount}
                         </span>
                       </p>
                     )}
