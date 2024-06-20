@@ -115,7 +115,7 @@ export default function RootLayout({ children }) {
                       <p className="">
                         Pay{" "}
                         <span className="text-blue-500 font-medium">
-                          GHS {amount}
+                          USD {amount}
                         </span>
                       </p>
                     )}
