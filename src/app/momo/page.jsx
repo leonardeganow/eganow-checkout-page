@@ -18,6 +18,7 @@ import { Rings } from "react-loader-spinner";
 import axios from "axios";
 import { toast } from "sonner";
 import Link from "next/link";
+import Header from "../components/Header";
 
 const options = [
   {
@@ -41,8 +42,6 @@ function Page() {
     register,
     handleSubmit,
     setValue,
-    getValues,
-    reset,
     watch,
     formState,
   } = useForm({
@@ -53,6 +52,9 @@ function Page() {
   const [momoName, setMomoName] = useState("");
   const [url, setUrl] = useState("sd");
   const [nameLoading, setNameLoading] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [currency, setCurrency] = useState()
+  const [amount, setAmount] = useState()
 
   // HANDLE SELECT OPTION
   const handleSelectChange = (selectedOption) => {
@@ -119,14 +121,33 @@ function Page() {
       if (!response.data.data.Status) {
         toast.error(response.data.data.Message);
       }
-      // console.log(response.data.data)
     } catch (error) {
       console.error(error);
     }
   };
 
+  const [pKey, setPkey] = useState("");
+
+  const getTokenData = async () => {
+    try {
+      const getData = await axios.get(`api/credentials/${pKey}`);
+      if (getData.data.token) {
+        setCurrency(getData.data.currency);
+        setAmount(getData.data.amount);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getTokenData();
+    setPkey(sessionStorage.getItem("p_key"));
+  }, [pKey]);
+
   return (
     <div className="">
+      <Header pathname={"momo"} loader={loader} currency={currency} amount={amount}/> 
       <div className="text-center flex justify-center items-center pt-5">
         <MdMobileScreenShare size={35} color="red" />
       </div>
@@ -142,12 +163,7 @@ function Page() {
 
         <div className="sm:w-[80%] w-full">
           <div className="w-full relative mb-5">
-            {/* <label
-              className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2 relative "
-              htmlFor="grid-password"
-            >
-              Momo Number
-            </label> */}
+
 
             <input
               className={clsx({
@@ -257,7 +273,7 @@ function Page() {
             type="submit"
             // disabled={formState.isSubmitting}
             disabled={momoName ? false : true}
-            className="bg-[#1f8fff] w-full flex justify-center items-center  text-white py-2 rounded-lg cursor-pointer active:bg-green-800"
+            className="bg-[#1f8fff] pay-btn w-full"
           >
             {formState.isSubmitting ? (
               <Rings
@@ -276,14 +292,14 @@ function Page() {
               </div>
             )}
           </button>
-          <p
+          <button
             onClick={() => {
               window.location.href = url;
             }}
-            className="text-center cursor-pointer text-xs mt-1 text-red-500 underline flex justify-center"
+            className="back-btn w-full mt-2"
           >
             Go back
-          </p>
+          </button>
         </div>
       </form>
     </div>

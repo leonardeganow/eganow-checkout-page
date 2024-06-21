@@ -11,7 +11,7 @@ import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic"; // defaults to auto
 export async function POST(request) {
-  const { username, password, x_auth, amount, callback_url, currency } =
+  const { username, password, x_auth, amount, callback_url, currency, payment_view_mode } =
     await request.json();
 
     console.log(username, password, amount, x_auth, currency, callback_url);
@@ -29,7 +29,8 @@ export async function POST(request) {
       x_auth,
       amount,
       callback_url,
-      currency
+      currency,
+      payment_view_mode
     };
 
     if (data.data.Token) {

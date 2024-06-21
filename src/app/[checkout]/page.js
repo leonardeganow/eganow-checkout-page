@@ -15,23 +15,26 @@ import { usePathname, useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 import SkeletonLoader from "./SkeletonLoader";
+import Header from "../components/Header";
+import ReactInputMask from "react-input-mask";
 
 export default function Home({ params }) {
   const [token, setToken] = useState(false);
   const [url, setUrl] = useState("");
   const [loader, setLoader] = useState(false);
-  const [currency, setCurrency] = useState()
+  const [currency, setCurrency] = useState();
+  const [amount, setAmount] = useState();
 
   //NOTE - useform
-  const { register, handleSubmit, reset, watch, formState, setValue } = useForm(
-    {
-      mode: "onChange",
-      resolver: yupResolver(validationSchema),
-      defaultValues: defaultFormValues,
-    }
-  );
+  const { register, handleSubmit, watch, formState, setValue } = useForm({
+    mode: "onChange",
+    resolver: yupResolver(validationSchema),
+    defaultValues: defaultFormValues,
+  });
   const router = useRouter();
   const p_key = params.checkout;
+  const pathname = usePathname();
+
   // save key to session storage
   sessionStorage.setItem("p_key", p_key);
 
@@ -41,8 +44,6 @@ export default function Home({ params }) {
     setLoader(true);
     try {
       const getData = await axios.get(`api/credentials/${p_key}`);
-      // console.log(p_key);
-      // console.log(getData.data);
       if (getData.data.token) {
         setLoader(false);
         setToken(getData.data.token);
@@ -53,6 +54,7 @@ export default function Home({ params }) {
         localStorage.setItem("currency", getData.data.currency);
         setValue("currency", getData.data.currency);
         setCurrency(getData.data.currency);
+        setAmount(getData.data.amount);
       }
     } catch (error) {
       console.log(error);
@@ -63,16 +65,32 @@ export default function Home({ params }) {
     }
   };
 
+  const formatCreditCardNumber = (creditCardNumber)=>{
+    if(!creditCardNumber){
+      return
+    }
+    return creditCardNumber.replace(/\s+/g, '')
+  }
+
   const onSubmit = async (values) => {
     const transactionId = nanoid(); //GENERATE TRANSACTION ID
+    const {name,accountNoOrCardNoOrMSISDN,cvv,expiryMonth,expiryYear,serviceId} = values;
+
     const data = {
-      narration: `${values.name} pays ${currency} ${localStorage.getItem("amount")}`,
+      narration: `${values.name} pays ${currency} ${localStorage.getItem(
+        "amount"
+      )}`,
       transactionId,
       amount: localStorage.getItem("amount"),
       token: localStorage.getItem("token"),
       xAuth: localStorage.getItem("xauth"),
       currency: localStorage.getItem("currency"),
-      ...values,
+      name,
+      cvv,
+      expiryMonth,
+      expiryYear,
+      accountNoOrCardNoOrMSISDN: formatCreditCardNumber(accountNoOrCardNoOrMSISDN),
+      serviceId
     };
     console.log(data);
     try {
@@ -101,7 +119,6 @@ export default function Home({ params }) {
     };
     try {
       const response = await axios.post(`/api/paymentmethods/`, body);
-      // console.log(response.data.data);
       if (response?.data?.data?.Status) {
         const serviceId =
           response?.data?.data?.PaymentTypesAndSvcList[3]?.PayPartnerServiceId;
@@ -126,23 +143,18 @@ export default function Home({ params }) {
   return (
     <div>
       {loader ? (
-        // <div className="w-24 h-24 mx-auto text-center flex justify-center items-center">
-        //   <Grid
-        //     visible={true}
-        //     height="40"
-        //     width="40"
-        //     color="lightgray"
-        //     ariaLabel="grid-loading"
-        //     radius="12.5"
-        //     wrapperClass="grid-wrapper"
-        //   />
-        // </div>
         <SkeletonLoader />
       ) : (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full max-w-lg mt-5 pb-5 "
+          className="w-full max-w-lg  pb-5 "
         >
+          <Header
+            pathname={pathname}
+            loader={loader}
+            currency={currency}
+            amount={amount}
+          />
           <h1 className="text-center font-semibold text-md mb-3 text-gray-500">
             Enter your card details to pay
           </h1>
@@ -155,20 +167,26 @@ export default function Home({ params }) {
                 CARD NUMBER
               </label>
 
-              <input
-                className={clsx({
-                  "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
-                  "border-green-500 border-2":
-                    formState.dirtyFields?.accountNoOrCardNoOrMSISDN &&
-                    !!!formState.errors?.accountNoOrCardNoOrMSISDN === true,
-                  "border-red-500 border-2":
-                    !!formState.errors?.accountNoOrCardNoOrMSISDN === true,
-                })}
-                id=""
-                type="number"
+              <ReactInputMask
+                mask="9999 9999 9999 9999"
+                maskChar=" "
                 {...register("accountNoOrCardNoOrMSISDN")}
-                placeholder="0000 0000 0000 0000"
-              />
+              >
+                {(inputProps) => (
+                  <input
+                    {...inputProps}
+                    className={clsx({
+                      "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 mb-3 leading-tight focus:outline-none focus:bg-white": true,
+                      "border-green-500 border-2":
+                        formState.dirtyFields?.accountNoOrCardNoOrMSISDN &&
+                        !!!formState.errors?.accountNoOrCardNoOrMSISDN,
+                      "border-red-500 border-2":
+                        !!formState.errors?.accountNoOrCardNoOrMSISDN,
+                    })}
+                    placeholder="0000 0000 0000 0000"
+                  />
+                )}
+              </ReactInputMask>
 
               <div className="card absolute -top-[49px] -right-[100px]">
                 <Cards
@@ -296,7 +314,7 @@ export default function Home({ params }) {
           <button
             type="submit"
             disabled={formState.isSubmitting}
-            className="bg-[#1f8fff] w-full flex justify-center items-center  text-white p-2 rounded-lg cursor-pointer active:bg-green-800"
+            className="bg-[#1f8fff] pay-btn w-full"
           >
             {formState.isSubmitting ? (
               <Rings
@@ -319,7 +337,7 @@ export default function Home({ params }) {
             onClick={() => {
               window.location.href = url;
             }}
-            className="text-center cursor-pointer text-xs mt-1 text-red-500 underline flex justify-center"
+            className="back-btn w-full mt-2"
           >
             Go back
           </p>
