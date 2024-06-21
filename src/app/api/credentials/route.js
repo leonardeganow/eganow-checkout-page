@@ -13,6 +13,8 @@ export const dynamic = "force-dynamic"; // defaults to auto
 export async function POST(request) {
   const { username, password, x_auth, amount, callback_url, currency } =
     await request.json();
+
+    console.log(username, password, amount, x_auth, currency, callback_url);
   try {
     const data = await axios.get(`${BASE_URL}/accesstoken`, {
       headers: {
@@ -20,6 +22,7 @@ export async function POST(request) {
         "Content-Type": "application/json", // Adjust content type as needed
       },
     });
+    // console.log(data);
 
     const values = {
       token: data.data.Token,
@@ -42,9 +45,12 @@ export async function POST(request) {
           "Content-Type": "application/json",
         },
       });
+
+      // console.log(response);
       return NextResponse.json(response.data, { status: 200 });
     }
   } catch (error) {
+    // console.log(error);
     return NextResponse.json(
       { error: "Failed to fetch access token" },
       { status: 500 }
