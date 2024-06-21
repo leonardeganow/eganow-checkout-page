@@ -147,7 +147,7 @@ export default function Home({ params }) {
       ) : (
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="w-full max-w-lg  pb-5 "
+          className="w-full   pb-5 "
         >
           <Header
             pathname={pathname}
