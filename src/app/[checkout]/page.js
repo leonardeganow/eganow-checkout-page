@@ -260,7 +260,7 @@ export default function Home({ params }) {
               />
               {formState?.errors?.expiryMonth?.message && (
                 <p className="text-sm text-red-500 hidden sm:block">
-                  {formState?.errors?.expiryMonth?.message}hidden sm:block
+                  {formState?.errors?.expiryMonth?.message}
                 </p>
               )}
             </div>
