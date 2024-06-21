@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
       const getData = await axios.get(`api/credentials/${pKey}`);
       if (getData.data.token) {
         setCurrency(getData.data.currency);
-        setViewMode("MODAL");
+        setViewMode(getData.data.payment_view_mode);
       }
     } catch (error) {
       console.log(error);

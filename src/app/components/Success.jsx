@@ -25,7 +25,7 @@ function Success() {
       localStorage.removeItem("xauth");
       localStorage.removeItem("transactionId");
 
-      window.location.href = `${url}&status=success`;
+      // window.location.href = `${url}&status=success`;
     }, 3000);
   }, []);
 
