@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
       const getData = await axios.get(`api/credentials/${pKey}`);
       if (getData.data.token) {
         setCurrency(getData.data.currency);
-        setViewMode(getData.data.payment_view_mode);
+        setViewMode("MODAL");
       }
     } catch (error) {
       console.log(error);
@@ -32,7 +32,7 @@ export default function RootLayout({ children }) {
       <Toaster richColors position="top-center" />
       <body
         className={`grid place-items-center  ${
-          viewMode === "MODAL" ? " bg-transparent" : " bg-[#304767] login-bg h-screen"
+          viewMode === "MODAL" ? " bg-transparent" : "  h-screen"
         } `}
       >
         <div className="w-full grid place-items-center ">

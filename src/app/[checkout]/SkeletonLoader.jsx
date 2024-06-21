@@ -2,7 +2,7 @@ import React from 'react'
 
 function SkeletonLoader() {
   return (
-    <div className="w-full max-w-lg mt-5 pb-5">
+    <div className="w-full  mt-5 pb-5">
           <div className="grid grid-cols-4 justify-between gap-3 mb-2">
         <div className="mb-4 md:mb-0 col-start-1">
           {/* <div className="block uppercase tracking-wide text-gray-500 text-xs md: font-medium mb-2 skeleton skeleton-text"></div> */}
