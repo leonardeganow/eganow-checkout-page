@@ -2,14 +2,15 @@
 import "./globals.css";
 import LeftNav from "./components/LeftNav";
 import { FaLock } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Toaster } from "sonner";
 import axios from "axios";
 
 export default function RootLayout({ children }) {
   const [currency, setCurrency] = useState("USD");
   const [pKey, setPkey] = useState("");
-  const [viewMode, setViewMode] = useState("");
+  const [viewMode, setViewMode] = useState("MODAL");
+
 
   const getTokenData = async () => {
     try {
@@ -26,13 +27,16 @@ export default function RootLayout({ children }) {
   useEffect(() => {
     getTokenData();
     setPkey(sessionStorage.getItem("p_key"));
-  }, [pKey]);
+  }, [pKey,viewMode]);
+
+
+
   return (
     <html lang="en">
       <Toaster richColors position="top-center" />
       <body
         className={`grid place-items-center  ${
-          viewMode === "MODAL" ? " bg-transparent" : "  h-screen"
+          viewMode != "MODAL" ? "login-bg bg-[#304767]  h-screen " : ""
         } `}
       >
         <div className="w-full grid place-items-center ">
