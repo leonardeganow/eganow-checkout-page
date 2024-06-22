@@ -12,6 +12,8 @@ function Page() {
   const [savedTransactionId, setSavedTransactionId] = useState("");
   const [token, setToken] = useState("");
   const statusRef = useRef(transactionStatus);
+  const [pKey, setPkey] = useState("");
+  const [viewMode, setViewMode] = useState("");
 
   // FUNCTION TO CHECK TRANSACTION STATUS
   const getStats = async () => {
@@ -30,6 +32,23 @@ function Page() {
       return false;
     }
   };
+
+  const getTokenData = async () => {
+    try {
+      const getData = await axios.get(`api/credentials/${pKey}`);
+      console.log(getData.data.payment_view_mode);
+      if (getData.data.token) {
+        setViewMode(getData.data.payment_view_mode);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getTokenData();
+    setPkey(sessionStorage.getItem("p_key"));
+  }, [pKey]);
 
   // console.log(transactionStatus);
 
@@ -58,9 +77,9 @@ function Page() {
   const renderStatusComponent = () => {
     switch (transactionStatus) {
       case "SUCCESSFUL":
-        return <Success />;
+        return <Success viewMode={viewMode}/>;
       case "FAILED":
-        return <Failed />;
+        return <Failed  viewMode={viewMode}/>;
       default:
         return <Pending />;
     }

@@ -5,7 +5,7 @@ import Lottie from "react-lottie";
 import Link from "next/link";
 import Image from "next/image";
 
-function Success() {
+function Success(props) {
   const [url, setUrl] = useState("");
   const defaultOptions = {
     loop: false,
@@ -29,6 +29,11 @@ function Success() {
     }, 3000);
   }, []);
 
+  const handleDoneClick = () => {
+    // Notify the parent window that payment was successful
+    window.parent.postMessage('successful', '*');
+  };
+
   return (
     <div className="flex flex-col items-center mt-5">
       <div className="w-auto h-24 text-center flex justify-center items-center">
@@ -42,22 +47,36 @@ function Success() {
         the merchant
       </small>
       <div className="mb-3">
-        <Link
-          onClick={() => {
-            localStorage.removeItem("amount");
-            localStorage.removeItem("token");
-            localStorage.removeItem("xauth");
-            localStorage.removeItem("transactionId");
-          }}
-          href={`${url}&status=success`}
-          // href={{
-          //   pathname: url,
-          //   query: { status: "success" },
-          // }}
-          className="bg-blue-500 my-4 md:px-4 md:py-2 p-2 text-sm md:text-base text-white shadow rounded "
-        >
-          Return to Merchant
-        </Link>
+        {props.viewMode === " MODAL" ? (
+          <button
+            onClick={handleDoneClick}
+            // href={`${url}&status=success`}
+            // href={{
+            //   pathname: url,
+            //   query: { status: "success" },
+            // }}
+            className="bg-blue-500 my-4 md:px-4 md:py-2 p-2 text-sm md:text-base text-white shadow rounded "
+          >
+            Return to Merchant
+          </button>
+        ) : (
+          <Link
+            onClick={() => {
+              localStorage.removeItem("amount");
+              localStorage.removeItem("token");
+              localStorage.removeItem("xauth");
+              localStorage.removeItem("transactionId");
+            }}
+            href={`${url}&status=success`}
+            // href={{
+            //   pathname: url,
+            //   query: { status: "success" },
+            // }}
+            className="bg-blue-500 my-4 md:px-4 md:py-2 p-2 text-sm md:text-base text-white shadow rounded "
+          >
+            Return to Merchant
+          </Link>
+        )}
       </div>
     </div>
   );
