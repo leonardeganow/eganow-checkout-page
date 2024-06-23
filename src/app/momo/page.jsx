@@ -13,12 +13,14 @@ import { MdMobileScreenShare } from "react-icons/md";
 
 import { customAlphabet } from "nanoid";
 // import { getAccHolderInfo, makeCollection } from "../api/token/route";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Rings } from "react-loader-spinner";
 import axios from "axios";
 import { toast } from "sonner";
 import Link from "next/link";
 import Header from "../components/Header";
+import MainLayout from "../layouts/MainLayout";
+import Loader from "../components/Loader";
 
 const options = [
   {
@@ -35,16 +37,12 @@ const options = [
 
 function Page() {
   const router = useRouter();
+  const pathname = usePathname();
+
   // INITIALIZE NANOID
   const nanoid = customAlphabet("0123456789", 12);
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState,
-  } = useForm({
+  const { register, handleSubmit, setValue, watch, formState } = useForm({
     mode: "onChange",
     resolver: yupResolver(validationSchema),
     defaultValues: defaultFormValues,
@@ -52,9 +50,10 @@ function Page() {
   const [momoName, setMomoName] = useState("");
   const [url, setUrl] = useState("sd");
   const [nameLoading, setNameLoading] = useState(false);
-  const [loader, setLoader] = useState(false);
-  const [currency, setCurrency] = useState()
-  const [amount, setAmount] = useState()
+  const [loader, setLoader] = useState(true);
+  const [currency, setCurrency] = useState();
+  const [amount, setAmount] = useState();
+  const [viewMode, setViewMode] = useState("");
 
   // HANDLE SELECT OPTION
   const handleSelectChange = (selectedOption) => {
@@ -131,12 +130,15 @@ function Page() {
   const getTokenData = async () => {
     try {
       const getData = await axios.get(`api/credentials/${pKey}`);
+      setLoader(false);
       if (getData.data.token) {
         setCurrency(getData.data.currency);
         setAmount(getData.data.amount);
+        setViewMode(getData.data.payment_view_mode);
       }
     } catch (error) {
       console.log(error);
+      setLoader(false);
     }
   };
 
@@ -145,164 +147,174 @@ function Page() {
     setPkey(sessionStorage.getItem("p_key"));
   }, [pKey]);
 
+  if (!viewMode) {
+    return <Loader />;
+  }
+
   return (
-    <div className="">
-      <Header pathname={"momo"} loader={loader} currency={currency} amount={amount}/> 
-      <div className="text-center flex justify-center items-center pt-5">
-        <MdMobileScreenShare size={35} color="red" />
-      </div>
+    <MainLayout
+      currency={currency}
+      viewMode={viewMode}
+      pathname={pathname}
+      loader={loader}
+      amount={amount}
+    >
+      <div className="">
+        <div className="text-center flex justify-center items-center pt-5">
+          <MdMobileScreenShare size={35} color="red" />
+        </div>
 
-      <form
-        className="flex flex-col items-center justify-center  mb-5  "
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <small className="text-center text-xs text-gray-400 block  p-3">
-          Enter your mobile money number and select a provider to start your
-          payment
-        </small>
+        <form
+          className="flex flex-col items-center justify-center  mb-5  "
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <small className="text-center text-xs text-gray-400 block  p-3">
+            Enter your mobile money number and select a provider to start your
+            payment
+          </small>
 
-        <div className="sm:w-[80%] w-full">
-          <div className="w-full relative mb-5">
-
-
-            <input
-              className={clsx({
-                "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded p-2  mb-3 leading-tight focus:outline-none focus:bg-white ": true,
-                "border-green-500 border-2":
-                  formState.dirtyFields?.momoNumber &&
-                  !!!formState.errors?.momoNumber === true,
-                "border-red-500 border-2":
-                  !!formState.errors?.momoNumber === true,
-              })}
-              id=""
-              type="string"
-              {...register("momoNumber")}
-              placeholder="Enter your momo number"
-            />
-
-            {formState?.errors?.momoNumber?.message && (
-              <small className="text-sm text-red-500">
-                {formState?.errors?.momoNumber?.message}
-              </small>
-            )}
-          </div>
-
-          <div className="mb-5">
-            <Select
-              options={options}
-              {...register("provider")}
-              onChange={handleSelectChange}
-              placeholder="Choose a provider"
-              color="#e5e7ebff"
-              className="bg-gray-200 rounded-lg border-0 outline-none focus:outline-none text-gray-800"
-              style={{
-                outline: "none",
-                borderRadius: "3px",
-                padding: "5px",
-              }}
-              itemRenderer={({ item, methods }) => (
-                <div
-                  key={item.value}
-                  className="flex items-center p-2 cursor-pointer"
-                  onClick={() => methods.addItem(item)}
-                >
-                  {/* Render the logo */}
-                  <img
-                    src={item.logo}
-                    alt={item.label}
-                    className="w-10 h-6 mr-2 object-contain"
-                  />
-                  {/* Render the label */}
-                  <span>{item.label}</span>
-                </div>
-              )}
-              contentRenderer={({ props, state }) => (
-                <div className="flex items-center">
-                  {/* Render the logo of the selected item */}
-                  {state.values.length > 0 && (
-                    <img
-                      src={state.values[0].logo}
-                      alt={state.values[0].label}
-                      className="w-auto h-6 mr-2 bg-gray-100 object-contain"
-                    />
-                  )}
-                  {/* Render the label of the selected item */}
-                  <span>
-                    {state.values.length > 0
-                      ? state.values[0].label
-                      : props.placeholder}
-                  </span>
-                </div>
-              )}
-            />
-
-            {!watch("provider") && formState?.errors?.provider?.message && (
-              <small className="text-sm text-red-500">
-                {formState?.errors?.provider?.message}
-              </small>
-            )}
-          </div>
-
-          <div className="flex flex-wrap -mx-3 mb-2">
-            <div className="w-full px-3 ">
+          <div className="sm:w-[80%] w-full">
+            <div className="w-full relative mb-5">
               <input
                 className={clsx({
-                  "appearance-none block font-md text-md w-full bg-gray-200 text-gray-700 border border-gray-200 rounded p-2 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
+                  "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded p-2  mb-3 leading-tight focus:outline-none focus:bg-white ": true,
                   "border-green-500 border-2":
-                    formState.dirtyFields?.name &&
-                    !!!formState.errors?.name === true,
-                  "border-red-500 border-2": !!formState.errors?.name === true,
+                    formState.dirtyFields?.momoNumber &&
+                    !!!formState.errors?.momoNumber === true,
+                  "border-red-500 border-2":
+                    !!formState.errors?.momoNumber === true,
                 })}
                 id=""
-                type="text"
-                {...register("name")}
-                placeholder="Momo name"
-                value={nameLoading ? "Loading..." : momoName}
-                disabled
+                type="string"
+                {...register("momoNumber")}
+                placeholder="Enter your momo number"
               />
 
-              {formState?.errors?.name?.message && (
-                <p className="text-sm text-red-500">
-                  {formState?.errors?.name?.message}
-                </p>
+              {formState?.errors?.momoNumber?.message && (
+                <small className="text-sm text-red-500">
+                  {formState?.errors?.momoNumber?.message}
+                </small>
               )}
             </div>
-          </div>
 
-          <button
-            type="submit"
-            // disabled={formState.isSubmitting}
-            disabled={momoName ? false : true}
-            className="bg-[#1f8fff] pay-btn w-full"
-          >
-            {formState.isSubmitting ? (
-              <Rings
-                visible={true}
-                height="30"
-                width="30"
-                color="white"
-                ariaLabel="rings-loading"
-                wrapperStyle={{}}
-                wrapperClass=""
+            <div className="mb-5">
+              <Select
+                options={options}
+                {...register("provider")}
+                onChange={handleSelectChange}
+                placeholder="Choose a provider"
+                color="#e5e7ebff"
+                className="bg-gray-200 rounded-lg border-0 outline-none focus:outline-none text-gray-800"
+                style={{
+                  outline: "none",
+                  borderRadius: "3px",
+                  padding: "5px",
+                }}
+                itemRenderer={({ item, methods }) => (
+                  <div
+                    key={item.value}
+                    className="flex items-center p-2 cursor-pointer"
+                    onClick={() => methods.addItem(item)}
+                  >
+                    {/* Render the logo */}
+                    <img
+                      src={item.logo}
+                      alt={item.label}
+                      className="w-10 h-6 mr-2 object-contain"
+                    />
+                    {/* Render the label */}
+                    <span>{item.label}</span>
+                  </div>
+                )}
+                contentRenderer={({ props, state }) => (
+                  <div className="flex items-center">
+                    {/* Render the logo of the selected item */}
+                    {state.values.length > 0 && (
+                      <img
+                        src={state.values[0].logo}
+                        alt={state.values[0].label}
+                        className="w-auto h-6 mr-2 bg-gray-100 object-contain"
+                      />
+                    )}
+                    {/* Render the label of the selected item */}
+                    <span>
+                      {state.values.length > 0
+                        ? state.values[0].label
+                        : props.placeholder}
+                    </span>
+                  </div>
+                )}
               />
-            ) : (
-              <div className="flex justify-center items-center gap-2">
-                <GiTakeMyMoney size={25} />
-                Pay
+
+              {!watch("provider") && formState?.errors?.provider?.message && (
+                <small className="text-sm text-red-500">
+                  {formState?.errors?.provider?.message}
+                </small>
+              )}
+            </div>
+
+            <div className="flex flex-wrap -mx-3 mb-2">
+              <div className="w-full px-3 ">
+                <input
+                  className={clsx({
+                    "appearance-none block font-md text-md w-full bg-gray-200 text-gray-700 border border-gray-200 rounded p-2 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
+                    "border-green-500 border-2":
+                      formState.dirtyFields?.name &&
+                      !!!formState.errors?.name === true,
+                    "border-red-500 border-2":
+                      !!formState.errors?.name === true,
+                  })}
+                  id=""
+                  type="text"
+                  {...register("name")}
+                  placeholder="Momo name"
+                  value={nameLoading ? "Loading..." : momoName}
+                  disabled
+                />
+
+                {formState?.errors?.name?.message && (
+                  <p className="text-sm text-red-500">
+                    {formState?.errors?.name?.message}
+                  </p>
+                )}
               </div>
-            )}
-          </button>
-          <button
-            onClick={() => {
-              window.location.href = url;
-            }}
-            className="back-btn w-full mt-2"
-          >
-            Go back
-          </button>
-        </div>
-      </form>
-    </div>
+            </div>
+
+            <button
+              type="submit"
+              // disabled={formState.isSubmitting}
+              disabled={momoName ? false : true}
+              className="bg-[#1f8fff] pay-btn w-full"
+            >
+              {formState.isSubmitting ? (
+                <Rings
+                  visible={true}
+                  height="30"
+                  width="30"
+                  color="white"
+                  ariaLabel="rings-loading"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                />
+              ) : (
+                <div className="flex justify-center items-center gap-2">
+                  <GiTakeMyMoney size={25} />
+                  Pay
+                </div>
+              )}
+            </button>
+            <button
+              onClick={() => {
+                window.location.href = url;
+              }}
+              className="back-btn w-full mt-2"
+            >
+              Go back
+            </button>
+          </div>
+        </form>
+      </div>
+    </MainLayout>
   );
 }
 
