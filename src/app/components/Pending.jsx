@@ -65,7 +65,7 @@ function Pending() {
   }, [paymentUrl]);
 
   return (
-    <div className="flex flex-col items-center mt-5">
+    <div className="flex flex-col items-center mt-5 ">
       <div className="w-24 h-24 text-center flex justify-center items-center">
         <Grid
           visible={true}
