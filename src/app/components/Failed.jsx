@@ -20,7 +20,7 @@ function Failed(props) {
 
   const handleDoneClick = () => {
     // Notify the parent window that payment was successful
-    window.parent.postMessage("successful", "*");
+    window.parent.postMessage("failed", "*");
   };
   return (
     <div className="flex flex-col items-center mt-5 py-5">
