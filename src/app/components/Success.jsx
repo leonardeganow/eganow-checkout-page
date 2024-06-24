@@ -34,6 +34,7 @@ function Success(props) {
     window.parent.postMessage('successful', '*');
   };
 
+  console.log(props);
   return (
     <div className="flex flex-col items-center mt-5">
       <div className="w-auto h-24 text-center flex justify-center items-center">
@@ -47,7 +48,7 @@ function Success(props) {
         the merchant
       </small>
       <div className="mb-3">
-        {props.viewMode === " MODAL" ? (
+        {props.viewMode === "MODAL" ? (
           <button
             onClick={handleDoneClick}
             // href={`${url}&status=success`}
