@@ -29,7 +29,7 @@ export default function Home({ params }) {
   const [viewMode, setViewMode] = useState("");
 
   //NOTE - useform
-  const { register, handleSubmit, watch, formState, setValue } = useForm({
+  const { register, handleSubmit, watch, formState, setValue ,getValues} = useForm({
     mode: "onChange",
     resolver: yupResolver(validationSchema),
     defaultValues: defaultFormValues,
@@ -56,6 +56,7 @@ export default function Home({ params }) {
         localStorage.setItem("callBack_url", getData.data.callback_url);
         localStorage.setItem("currency", getData.data.currency);
         setValue("currency", getData.data.currency);
+        setValue("amount", getData.data.amount);
         setCurrency(getData.data.currency);
         setAmount(getData.data.amount);
         setViewMode(getData.data.payment_view_mode);
@@ -88,11 +89,9 @@ export default function Home({ params }) {
     } = values;
 
     const data = {
-      narration: `${values.name} pays ${currency} ${localStorage.getItem(
-        "amount"
-      )}`,
+      narration: `${values.name} pays ${currency} ${amount}`,
       transactionId,
-      amount: localStorage.getItem("amount"),
+      amount: getValues("amount"),
       token: localStorage.getItem("token"),
       xAuth: localStorage.getItem("xauth"),
       currency: localStorage.getItem("currency"),
@@ -149,6 +148,10 @@ export default function Home({ params }) {
   }, [url]);
 
   useEffect(() => {
+    setAmount(watch("amount"));
+  }, [watch("amount")]);
+
+  useEffect(() => {
     getTokenData();
     getPaymethods();
   }, [token]);
@@ -170,11 +173,42 @@ export default function Home({ params }) {
           <SkeletonLoader />
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="w-full   pb-5 ">
- 
+
             <h1 className="text-center font-semibold text-md mb-3 text-gray-500">
               Enter your card details to pay
             </h1>
             <div className="flex flex-wrap -mx-3 mb-2">
+
+              <div className="w-full px-3 relative">
+                <label
+                  className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2 relative "
+                  htmlFor="grid-password"
+                >
+                  Amount
+                </label>
+
+                <input
+                  className={clsx({
+                    "appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-2 px-4 mb-3 leading-tight focus:outline-none focus:bg-white ": true,
+                    "border-green-500 border-2":
+                      formState.dirtyFields?.amount &&
+                      !!!formState.errors?.amount === true,
+                    "border-red-500 border-2":
+                      !!formState.errors?.amount === true,
+                  })}
+                  id=""
+                  type="number"
+                  {...register("amount")}
+                  placeholder="Enter amount to pay"
+                />
+
+                {formState?.errors?.amount?.message && (
+                  <p className="text-sm text-red-500">
+                    {formState?.errors?.amount?.message}
+                  </p>
+                )}
+              </div>
+
               <div className="w-full px-3 relative">
                 <label
                   className=" block uppercase tracking-wide text-gray-500 text-xs font-semibold mb-2 relative "
@@ -211,7 +245,7 @@ export default function Home({ params }) {
                     cvc={watch("cvv")}
                     name={"leonard adjei"}
                     size={40}
-                    // focused={state.focus}
+                  // focused={state.focus}
                   />
                 </div>
                 {formState?.errors?.accountNoOrCardNoOrMSISDN?.message && (

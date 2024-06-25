@@ -32,7 +32,7 @@ export default function Home() {
   return (
     <div className="text-center">
       {" "}
-      <div className="  ">
+      <div className=" flex justify-center items-center md:w-[40%] w-[70%] mx-auto h-screen  ">
         {/* <Grid
           visible={true}
           height="40"
