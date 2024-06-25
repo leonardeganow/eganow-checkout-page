@@ -20,7 +20,7 @@ function Page() {
     const data = {
       token: token,
       transactionId: savedTransactionId,
-      xAuth: localStorage.getItem("xauth")
+      xAuth: localStorage.getItem("xauth"),
     };
 
     // console.log(data);
@@ -77,15 +77,22 @@ function Page() {
   const renderStatusComponent = () => {
     switch (transactionStatus) {
       case "SUCCESSFUL":
-        return <Success viewMode={viewMode}/>;
+        return <Success viewMode={viewMode} />;
       case "FAILED":
-        return <Failed  viewMode={viewMode}/>;
+        return <Failed viewMode={viewMode} />;
       default:
         return <Pending />;
     }
   };
 
-  return <div>{renderStatusComponent()}</div>;
+  return (
+    <div className="w-full grid place-items-center overflow-hidden ">
+      <div className="lg:w-[33%] w-[90%] sm:w-[60%] mt-10 sm:mt-0 rounded-lg drop-shadow-xl bg-white">
+        {renderStatusComponent()}
+      </div>
+      ;
+    </div>
+  );
 }
 
 export default Page;

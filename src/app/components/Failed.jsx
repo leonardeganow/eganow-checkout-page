@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import success from "../../../public/sucess.gif";
 import failed from "../../../public/remove.png";
 import Link from "next/link";
 import Image from "next/image";
@@ -21,7 +20,7 @@ function Failed(props) {
 
   const handleDoneClick = () => {
     // Notify the parent window that payment was successful
-    window.parent.postMessage("successful", "*");
+    window.parent.postMessage("failed", "*");
   };
   return (
     <div className="flex flex-col items-center mt-5 py-5">
@@ -39,16 +38,13 @@ function Failed(props) {
       <div className="mb-8">
         <Link
           href="/"
-          // href={{
-          //   pathname: localStorage.getItem("callBack_url"),
-          //   query: { status: "failed" },
-          // }}
+      
           className="bg-yellow-500 my-4 md:px-4 md:py-2 p-2 text-sm md:text-base text-white shadow rounded "
         >
           Retry payment
         </Link>{" "}
       </div>
-      {props.viewMode === " MODAL" ? (
+      {props.viewMode === "MODAL" ? (
         <button
           onClick={handleDoneClick}
           // href={`${url}&status=failed`}
